@@ -1,10 +1,10 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import *
 
 
 @admin.register(User)
-class UserAdmin(UserAdmin):
+class UserAdmin(BaseUserAdmin):
     list_display = ('id', 'phone', 'full_name', 'image', 'is_staff')
     fields = ('phone', 'password', 'first_name', 'last_name', 'image')
     search_fields = ('phone', 'first_name', 'last_name')
