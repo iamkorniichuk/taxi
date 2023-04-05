@@ -1,10 +1,10 @@
 from django.contrib.auth.views import LoginView as BaseLoginView, LogoutView as LogOutView
 from django.views.generic import CreateView
 
-from .apps import UsersConfig
+from .apps import MyAuthConfig
 from .forms import *
 
-APP_NAME = UsersConfig.name
+APP_NAME = MyAuthConfig.name
 
 
 class LogInView(BaseLoginView):

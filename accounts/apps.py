@@ -1,10 +1,10 @@
 from django.apps import AppConfig
 
 
-class CustomersConfig(AppConfig):
+class AccountsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'customers'
+    name = 'accounts'
 
     def ready(self):
-        import customers.handlers
+        import accounts.handlers
         return super().ready()
