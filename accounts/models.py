@@ -3,59 +3,56 @@ from django.db import models
 from datetime import datetime
 
 
-class Customer(models.Model):
-    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE,
-                                related_name='customer', primary_key=True)
+class Profile(models.Model):
+    class Meta:
+        abstract = True
+
     join_date = models.DateField(auto_now=True, editable=False)
 
     @property
     def joined_for(self):
-        return datetime.now().date() - self.join_date
+        return (datetime.now().date() - self.join_date).days
 
-    @property
-    def rating(self):
-        return ''
+
+class Customer(Profile):
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE,
+                                related_name='customer', primary_key=True)
 
     def __str__(self) -> str:
         return self.user.__str__()
 
+class Employee(Profile):
+    class Meta:
+        abstract = True
 
-class Employee(models.Model):
-    related_customer_name = 'employee'
-    default_job_title = related_customer_name
-    customer = models.OneToOneField(Customer, on_delete=models.CASCADE,
-                                    related_name=related_customer_name, primary_key=True)
-    join_date = models.DateField(auto_now=True, editable=False)
-    job_title = models.CharField(max_length=100, default=default_job_title,
-                                 blank=False, null=False)
-
-    @property
-    def joined_for(self):
-        return datetime.now().date() - self.join_date
+    customer = models.OneToOneField(Customer, on_delete=models.CASCADE, primary_key=True)
+    job_title = models.CharField(max_length=100, default='%(class)s',
+                                blank=False, null=False)
 
 
 class MyDirector(Employee):
-    related_customer_name = 'director'
-
     class Meta:
-        verbose_name = 'director'
-        verbose_name_plural = 'directors'
+        default_related_name = 'director'
+        verbose_name = default_related_name
+        verbose_name_plural = default_related_name + 's'
 
 
 class MyManager(Employee):
-    related_customer_name = 'manager'
     director = models.ForeignKey(MyDirector, on_delete=models.RESTRICT,
                                  related_name='managers')
 
     class Meta:
-        verbose_name = 'manager'
-        verbose_name_plural = 'managers'
+        default_related_name = 'manager'
+        verbose_name = default_related_name
+        verbose_name_plural = default_related_name + 's'
 
 
 class Driver(Employee):
-    related_customer_name = 'driver'
     manager = models.ForeignKey(MyManager, on_delete=models.RESTRICT,
                                 related_name='drivers')
+
+    class Meta:
+        default_related_name = 'driver'
 
     @property
     def rating(self):

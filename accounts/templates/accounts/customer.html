@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% include 'accounts/includes/links.html' %}
+{% include 'accounts/includes/info.html' %}
+<div>Customer</div>
+{% with user.customer as customer %}
+    <div>
+        {{ customer.joined_for }} days
+    </div>
+{% endwith %}
+{% endblock content %}

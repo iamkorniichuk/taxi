@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% include 'accounts/includes/links.html' %}
+{% include 'accounts/includes/info.html' %}
+<div>Driver</div>
+{% with user.customer.driver as driver %}
+    <div>
+        {{ driver.joined_for }} days
+    </div>
+{% endwith %}
+{% endblock content %}

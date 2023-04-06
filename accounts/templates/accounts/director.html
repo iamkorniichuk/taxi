@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% include 'accounts/includes/links.html' %}
+{% include 'accounts/includes/info.html' %}
+<div>Director</div>
+{% with user.customer.director as director %}
+    <div>
+        {{ director.joined_for }} days
+    </div>
+{% endwith %}
+{% endblock content %}

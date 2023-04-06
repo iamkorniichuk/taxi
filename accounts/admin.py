@@ -4,7 +4,7 @@ from .models import *
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('user', 'rating', 'join_date')
+    list_display = ('user', 'join_date')
     ordering = ('join_date', )
     fields = ('user', )
 

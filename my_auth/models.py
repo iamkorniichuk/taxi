@@ -45,7 +45,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def is_driver(self):
         from accounts.models import Driver
         return self.__is_employee__(Driver)
-    
+
     @property
     def is_manager(self):
         from accounts.models import MyManager
