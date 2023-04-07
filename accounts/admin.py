@@ -16,9 +16,14 @@ class EmployeeAdmin(admin.ModelAdmin):
 
 
 admin.site.register(MyDirector, EmployeeAdmin)
-admin.site.register(MyManager, EmployeeAdmin)
+
+
+@admin.register(MyManager)
+class ManagerAdmin(EmployeeAdmin):
+    fields = ('customer', 'director')
 
 
 @admin.register(Driver)
 class DriverAdmin(EmployeeAdmin):
     list_display = ('customer', 'rating', 'join_date')
+    fields = ('customer', 'manager')

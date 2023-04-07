@@ -28,6 +28,9 @@ class Employee(Profile):
     customer = models.OneToOneField(Customer, on_delete=models.CASCADE, primary_key=True)
     job_title = models.CharField(max_length=100, default='%(class)s',
                                 blank=False, null=False)
+    
+    def __str__(self) -> str:
+        return self.customer.user.__str__()
 
 
 class MyDirector(Employee):
