@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
 
 from accounts.models import Customer
 from cars.models import TypeChoices, ClassChoices
@@ -18,9 +17,10 @@ MONEY_KWARGS = {
 class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE,
                                  related_name='orders')
-    start_point = ArrayField(models.DecimalField(**POINT_KWARGS), size=2)
-    end_point = ArrayField(models.DecimalField(**POINT_KWARGS), size=2)
-    stop_points = ArrayField(models.DecimalField(**POINT_KWARGS), size=3)
+    start_lat = models.DecimalField(**POINT_KWARGS)
+    start_lon = models.DecimalField(**POINT_KWARGS)
+    end_lat = models.DecimalField(**POINT_KWARGS)
+    end_lon = models.DecimalField(**POINT_KWARGS)
     price = models.DecimalField(**MONEY_KWARGS)
     note = models.CharField(max_length=128)
     datetime = models.DateTimeField(auto_now=True)
@@ -28,6 +28,14 @@ class Order(models.Model):
                                 default=TypeChoices.BASIC)
     car_class = models.CharField(max_length=5, choices=ClassChoices.choices,
                                  default=ClassChoices.BASIC)
+
+    @property
+    def start_point(self):
+        return (self.start_lat, self.start_lon)
+    
+    @property
+    def end_point(self):
+        return (self.end_lat, self.end_lon)
 
     @property
     def is_completed(self):
