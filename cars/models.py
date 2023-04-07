@@ -35,12 +35,12 @@ class Car(models.Model):
     number = models.CharField(max_length=12, unique=True)
     driver = models.ForeignKey(Driver, on_delete=models.CASCADE,
                                related_name='cars')
-    brand = models.CharField(max_length=5, blank=False)
+    brand = models.CharField(max_length=32, blank=False)
     model = models.CharField(max_length=32, blank=False)
-    _type = models.CharField('type', max_length=5,
-                             choices=TypeChoices.choices, blank=False)
+    type = models.CharField(max_length=5, choices=TypeChoices.choices,
+                            blank=False)
     year = models.IntegerField(choices=YEAR_CHOICES, null=False)
-    _class = models.CharField('class', max_length=5,
+    _class = models.CharField(verbose_name='class', max_length=5,
                               choices=ClassChoices.choices, blank=False)
     color = models.CharField(max_length=5, choices=ColorChoices.choices,
                              blank=False)
@@ -48,3 +48,6 @@ class Car(models.Model):
     @property
     def full_name(self):
         return f'{self.color} {self.brand} {self.model}'
+    
+    def __str__(self) -> str:
+        return self.full_name

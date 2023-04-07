@@ -31,8 +31,10 @@ class Order(models.Model):
 
     @property
     def is_completed(self):
-        ...
+        # TODO: To end
+        return False
 
     @property
     def wait_time(self):
-        ...
+        # TODO: To end
+        return 0
