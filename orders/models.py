@@ -31,11 +31,11 @@ class Order(models.Model):
 
     @property
     def start_point(self):
-        return (self.start_lat, self.start_lon)
+        return (self.start_lat.__str__(), self.start_lon.__str__())
     
     @property
     def end_point(self):
-        return (self.end_lat, self.end_lon)
+        return (self.end_lat.__str__(), self.end_lon.__str__())
 
     @property
     def is_completed(self):

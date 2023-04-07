@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% for order in orders  %}
+    <div style="border: 1px solid black">
+        <div>Customer: {{ order.customer }}</div>
+        <div>Start: {{ order.start_point }}</div>
+        <div>End: {{ order.end_point }}</div>
+        <div>Price: {{ order.price }} UAH</div>
+        <div><i>{{ order.note }}</i></div>
+        <div>{{ order.get_car_type_display }} type</div>
+        <div>{{ order.get_car_class_display }} class</div>
+    </div>
+{% endfor %}
+{% endblock content %}
