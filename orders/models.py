@@ -22,7 +22,7 @@ class Order(models.Model):
     end_lat = models.DecimalField(**POINT_KWARGS)
     end_lon = models.DecimalField(**POINT_KWARGS)
     price = models.DecimalField(**MONEY_KWARGS)
-    note = models.CharField(max_length=128)
+    note = models.CharField(max_length=128, blank=True)
     datetime = models.DateTimeField(auto_now=True)
     car_type = models.CharField(max_length=5, choices=TypeChoices.choices,
                                 default=TypeChoices.BASIC)
@@ -39,10 +39,14 @@ class Order(models.Model):
 
     @property
     def is_completed(self):
-        # TODO: To end
-        return False
+        return self.trip.is_completed
 
     @property
     def wait_time(self):
-        # TODO: To end
-        return 0
+        if self.is_completed:
+            return self.trip.start_datetime - self.datetime
+        return False
+    
+    def __str__(self) -> str:
+        return self.pk.__str__()
+        
