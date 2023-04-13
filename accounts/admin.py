@@ -10,9 +10,9 @@ class CustomerAdmin(admin.ModelAdmin):
 
 
 class EmployeeAdmin(admin.ModelAdmin):
-    list_display = ('customer', 'job_title', 'join_date')
+    list_display = ('user', 'job_title', 'join_date')
     ordering = ('join_date', )
-    fields = ('customer', 'job_title')
+    fields = ('user', 'job_title')
 
 
 admin.site.register(MyDirector, EmployeeAdmin)
@@ -20,10 +20,10 @@ admin.site.register(MyDirector, EmployeeAdmin)
 
 @admin.register(MyManager)
 class ManagerAdmin(EmployeeAdmin):
-    fields = ('customer', 'director', 'job_title')
+    fields = ('user', 'director', 'job_title')
 
 
 @admin.register(Driver)
 class DriverAdmin(EmployeeAdmin):
-    list_display = ('customer', 'rating', 'join_date', 'job_title')
-    fields = ('customer', 'manager', 'job_title')
+    list_display = ('user', 'rating', 'join_date', 'job_title')
+    fields = ('user', 'manager', 'job_title')

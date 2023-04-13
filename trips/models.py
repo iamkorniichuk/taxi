@@ -19,6 +19,12 @@ class Trip(models.Model):
     @property
     def is_completed(self):
         return self.end_datetime != None
+    
+    @property
+    def wait_time(self):
+        if self.is_completed:
+            return self.start_datetime - self.order.datetime
+        return False
 
     @property
     def duration(self):

@@ -11,12 +11,19 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+os.environ['GDAL_DATA'] = r'.\venv\Lib\site-packages\osgeo\data\gdal'
+os.environ['PROJ_LIB'] = r'.\venv\Lib\site-packages\osgeo\data\proj'
+os.environ['PATH'] = r'.\venv\Lib\site-packages\osgeo;' + os.environ['PATH']
+GDAL_LIBRARY_PATH = r'.\venv\Lib\site-packages\osgeo\gdal304.dll'
+
+SPATIALITE_LIBRARY_PATH = 'mod_spatialite'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -44,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
 ]
 
 MIDDLEWARE = [
@@ -84,7 +92,7 @@ WSGI_APPLICATION = 'taxi.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
+        'ENGINE': 'django.contrib.gis.db.backends.spatialite',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }

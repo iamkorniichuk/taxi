@@ -6,6 +6,7 @@ from datetime import datetime
 class Profile(models.Model):
     class Meta:
         abstract = True
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE,primary_key=True)
 
     join_date = models.DateField(auto_now=True, editable=False)
 
@@ -13,24 +14,27 @@ class Profile(models.Model):
     def joined_for(self):
         return (datetime.now().date() - self.join_date).days
 
-
-class Customer(Profile):
-    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE,
-                                related_name='customer', primary_key=True)
-
     def __str__(self) -> str:
         return self.user.__str__()
+
+
+class Customer(Profile):
+    class Meta:
+        default_related_name = 'customer'
+        verbose_name = default_related_name
+        verbose_name_plural = default_related_name + 's'
+
 
 class Employee(Profile):
     class Meta:
         abstract = True
 
-    customer = models.OneToOneField(Customer, on_delete=models.CASCADE, primary_key=True)
-    job_title = models.CharField(max_length=100, default='%(class)s',
-                                blank=False, null=False)
-    
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE,
+                                primary_key=True)
+    job_title = models.CharField(max_length=100, blank=False, null=False)
+
     def __str__(self) -> str:
-        return self.customer.user.__str__()
+        return self.user.__str__()
 
 
 class MyDirector(Employee):
@@ -53,9 +57,6 @@ class MyManager(Employee):
 class Driver(Employee):
     manager = models.ForeignKey(MyManager, on_delete=models.RESTRICT,
                                 related_name='drivers')
-
-    class Meta:
-        default_related_name = 'driver'
 
     @property
     def rating(self):
