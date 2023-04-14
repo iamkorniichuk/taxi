@@ -23,9 +23,3 @@ class CreateOrderView(LoginRequiredMixin, CreateView):
         instance.customer = self.request.user.customer
         instance.save()
         return super().form_valid(form)
-
-
-class AcceptOrderView(LoginRequiredMixin, ListView):
-    model = Order
-    template_name = APP_NAME + '/accept.html'
-    context_object_name = 'orders'

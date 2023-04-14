@@ -1,13 +1,16 @@
-from orders.views import CreateOrderView, AcceptOrderView
+from orders.views import CreateOrderView
+from trips.views import AcceptOrderView
 from django.views.generic import *
 from django.contrib.auth.decorators import login_required
+
 
 @login_required
 def home_view(request, *args, **kwargs):
     user = request.user
     view = None
-    if user.is_customer:
-        view = CreateOrderView.as_view()
-    elif user.is_driver:
+    # if user.is_customer:
+    #     view = CreateOrderView.as_view()
+    # el
+    if user.is_driver:
         view = AcceptOrderView.as_view()
     return view(request)

@@ -10,6 +10,11 @@
         <div><i>{{ order.note }}</i></div>
         <div>{{ order.get_car_type_display }} type</div>
         <div>{{ order.get_car_class_display }} class</div>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="order_pk" value="{{ order.pk }}" readonly="readonly">
+            <div><button type="submit">Accept</button></div>
+        </form>
     </div>
 {% endfor %}
 {% endblock content %}
