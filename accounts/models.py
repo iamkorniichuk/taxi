@@ -2,10 +2,14 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from datetime import datetime
 
+from django.urls import reverse_lazy
+
 
 class Profile(models.Model):
     class Meta:
         abstract = True
+
+    path_name = None
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE,primary_key=True)
 
     join_date = models.DateField(auto_now=True, editable=False)
@@ -14,11 +18,17 @@ class Profile(models.Model):
     def joined_for(self):
         return (datetime.now().date() - self.join_date).days
 
+    @property
+    def home_url(self):
+        return reverse_lazy(self.path_name)
+
     def __str__(self) -> str:
         return self.user.__str__()
 
 
 class Customer(Profile):
+    path_name = 'orders:create'
+
     class Meta:
         default_related_name = 'customer'
         verbose_name = default_related_name
@@ -38,6 +48,9 @@ class Employee(Profile):
 
 
 class MyDirector(Employee):
+    # TODO: Provide valid path
+    path_name = 'home'
+
     class Meta:
         default_related_name = 'director'
         verbose_name = default_related_name
@@ -45,6 +58,9 @@ class MyDirector(Employee):
 
 
 class MyManager(Employee):
+    # TODO: Provide valid path
+    path_name = 'home'
+
     director = models.ForeignKey(MyDirector, on_delete=models.RESTRICT,
                                  related_name='managers')
 
@@ -55,6 +71,8 @@ class MyManager(Employee):
 
 
 class Driver(Employee):
+    path_name = 'orders:accept_list'
+
     manager = models.ForeignKey(MyManager, on_delete=models.RESTRICT,
                                 related_name='drivers')
 

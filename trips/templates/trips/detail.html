@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<p>{{ trip }}</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">End</button>
+</form>
+{% endblock content %}

@@ -1,16 +1,14 @@
-from orders.views import CreateOrderView
-from trips.views import AcceptOrderView
-from django.views.generic import *
-from django.contrib.auth.decorators import login_required
+from django.views.generic import RedirectView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-@login_required
-def home_view(request, *args, **kwargs):
-    user = request.user
-    view = None
-    # if user.is_customer:
-    #     view = CreateOrderView.as_view()
-    # el
-    if user.is_driver:
-        view = AcceptOrderView.as_view()
-    return view(request)
+class HomeRedirectView(RedirectView, LoginRequiredMixin):
+    def get_redirect_url(self, *args, **kwargs):
+        user = self.request.user
+        home_url = None
+        # TODO: To end
+        if user.is_driver:
+            home_url = user.driver.home_url
+        elif user.is_customer:
+            home_url = user.customer.home_url
+        return home_url
