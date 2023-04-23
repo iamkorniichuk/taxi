@@ -10,7 +10,8 @@ class Profile(models.Model):
         abstract = True
 
     path_name = None
-    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE,primary_key=True)
+    user = models.OneToOneField(
+        get_user_model(), on_delete=models.CASCADE, primary_key=True)
 
     join_date = models.DateField(auto_now=True, editable=False)
 
@@ -21,6 +22,10 @@ class Profile(models.Model):
     @property
     def home_url(self):
         return reverse_lazy(self.path_name)
+    
+    @property
+    def model_name(self):
+        return self._meta.default_related_name or self._meta.model_name
 
     def __str__(self) -> str:
         return self.user.__str__()
@@ -49,7 +54,7 @@ class Employee(Profile):
 
 class MyDirector(Employee):
     # TODO: Provide valid path
-    path_name = 'home'
+    path_name = 'orders:accept_list'
 
     class Meta:
         default_related_name = 'director'
@@ -59,7 +64,7 @@ class MyDirector(Employee):
 
 class MyManager(Employee):
     # TODO: Provide valid path
-    path_name = 'home'
+    path_name = 'orders:accept_list'
 
     director = models.ForeignKey(MyDirector, on_delete=models.RESTRICT,
                                  related_name='managers')
@@ -79,3 +84,7 @@ class Driver(Employee):
     @property
     def rating(self):
         return ''
+
+
+ROLES: list[Profile] = [Customer, Driver, MyManager, MyDirector]
+'''Non-abstract account models in order of increasing permissions'''

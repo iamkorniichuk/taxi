@@ -1,0 +1,10 @@
+{% with account.job_title as job_title %}
+    {% if job_title %}
+    <div>
+        <b>{{ job_title }}</b>
+    </div>
+    {% endif %}
+{% endwith %}
+<div>
+    {{ account.joined_for }} days
+</div>

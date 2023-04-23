@@ -2,11 +2,10 @@
 
 {% block content %}
 {% include 'accounts/includes/links.html' %}
-{% include 'accounts/includes/info.html' %}
-<div>Customer</div>
+{% include 'accounts/includes/user_info.html' %}
+
 {% with user.customer as customer %}
-    <div>
-        {{ customer.joined_for }} days
-    </div>
+    {% include 'accounts/includes/account_info.html' with account=customer %}
 {% endwith %}
+
 {% endblock content %}

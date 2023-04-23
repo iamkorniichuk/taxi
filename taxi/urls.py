@@ -22,8 +22,8 @@ from .views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', HomeRedirectView.as_view(), name='home'),
     path('', include(('my_auth.urls', 'my_auth'))),
+    path('', HomeRedirectView.as_view(), name='home'),
     path('accounts/', include(('accounts.urls', 'accounts'))),
     path('orders/', include(('orders.urls', 'orders'))),
     path('trips/', include(('trips.urls', 'trips'))),

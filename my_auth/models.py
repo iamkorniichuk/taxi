@@ -33,32 +33,20 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'phone'
 
+    def __init__(self, *args, **kwargs):
+        '''Instance attributes created according to default_related_name of account's constant ROLES'''
+        from accounts.models import ROLES
+        for role in ROLES:
+            setattr(self, f'is_{role.model_name}',
+                    lambda: self.__is_related__(role))
+        super().__init__(*args, **kwargs)
+
     @property
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
 
     def __is_related__(self, model: models.Model) -> bool:
         return model.objects.filter(user=self).first() != None
-
-    @property
-    def is_customer(self):
-        from accounts.models import Customer
-        return self.__is_related__(Customer)
-
-    @property
-    def is_driver(self):
-        from accounts.models import Driver
-        return self.__is_related__(Driver)
-
-    @property
-    def is_manager(self):
-        from accounts.models import MyManager
-        return self.__is_related__(MyManager)
-
-    @property
-    def is_director(self):
-        from accounts.models import MyDirector
-        return self.__is_related__(MyDirector)
 
     def __str__(self) -> str:
         return self.phone if self.full_name.isspace() else self.full_name

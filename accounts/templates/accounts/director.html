@@ -2,11 +2,10 @@
 
 {% block content %}
 {% include 'accounts/includes/links.html' %}
-{% include 'accounts/includes/info.html' %}
-<div>Director</div>
-{% with user.customer.director as director %}
-    <div>
-        {{ director.joined_for }} days
-    </div>
+{% include 'accounts/includes/user_info.html' %}
+
+{% with user.director as director %}
+    {% include 'accounts/includes/account_info.html' with account=director %}
 {% endwith %}
+
 {% endblock content %}
