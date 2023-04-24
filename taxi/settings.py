@@ -10,18 +10,20 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+from django.urls import reverse_lazy
+from django.core.management.utils import get_random_secret_key
 from pathlib import Path
 import os
 
-from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-os.environ['GDAL_DATA'] = r'.\venv\Lib\site-packages\osgeo\data\gdal'
-os.environ['PROJ_LIB'] = r'.\venv\Lib\site-packages\osgeo\data\proj'
-os.environ['PATH'] = r'.\venv\Lib\site-packages\osgeo;' + os.environ['PATH']
-GDAL_LIBRARY_PATH = r'.\venv\Lib\site-packages\osgeo\gdal304.dll'
+OSGEO_PATH = r'.\venv\Lib\site-packages\osgeo'
+os.environ['GDAL_DATA'] = OSGEO_PATH + r'\data\gdal'
+os.environ['PROJ_LIB'] = OSGEO_PATH + r'\data\proj'
+os.environ['PATH'] = OSGEO_PATH + os.environ['PATH']
+GDAL_LIBRARY_PATH = OSGEO_PATH + r'\gdal304.dll'
 
 SPATIALITE_LIBRARY_PATH = 'mod_spatialite'
 
@@ -29,7 +31,7 @@ SPATIALITE_LIBRARY_PATH = 'mod_spatialite'
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-q8r)a$^$0j5dw-a4gsk@qo*+^&o944pye*b1oh126i9k@y37q*'
+SECRET_KEY = get_random_secret_key()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -139,6 +141,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 
 LOGIN_URL = reverse_lazy('my_auth:login')
 LOGIN_REDIRECT_URL = reverse_lazy('home')

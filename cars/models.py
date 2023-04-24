@@ -48,6 +48,6 @@ class Car(models.Model):
     @property
     def full_name(self):
         return f'{self.color} {self.brand} {self.model}'
-    
+
     def __str__(self) -> str:
         return self.full_name

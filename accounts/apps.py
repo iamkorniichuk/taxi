@@ -8,3 +8,6 @@ class AccountsConfig(AppConfig):
     def ready(self):
         import accounts.handlers
         return super().ready()
+
+
+APP_NAME = AccountsConfig.name

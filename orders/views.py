@@ -6,10 +6,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from trips.models import Trip
 
 from .models import Order
-from .apps import OrdersConfig
+from .apps import APP_NAME
 from .forms import *
-
-APP_NAME = OrdersConfig.name
 
 
 class CreateOrderView(LoginRequiredMixin, CreateView):

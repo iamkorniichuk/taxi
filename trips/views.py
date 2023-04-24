@@ -5,9 +5,7 @@ from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Trip
-from .apps import TripsConfig
-
-APP_NAME = TripsConfig.name
+from .apps import APP_NAME
 
 
 class TripDetailView(LoginRequiredMixin, DetailView):

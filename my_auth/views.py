@@ -3,10 +3,8 @@ from django.http import HttpResponseRedirect
 from django.views.generic import CreateView
 from django.contrib.auth import login
 
-from .apps import MyAuthConfig
+from .apps import APP_NAME
 from .forms import *
-
-APP_NAME = MyAuthConfig.name
 
 
 class LogInView(BaseLoginView):

@@ -7,10 +7,10 @@ class Report(models.Model):
     trip = models.ForeignKey(Trip, models.CASCADE, related_name='reports')
     message = models.TextField(max_length=256)
     report_datetime = models.DateTimeField(auto_now=True, editable=False)
-    answer = models.TextField(max_length=256, blank=True, null=True)
+    answer = models.TextField(max_length=256, blank=True, default='')
     complete_datetime = models.DateTimeField(null=True)
-    manager = models.ForeignKey(MyManager, models.CASCADE, blank=True,
-                                related_name='reports', null=True)
+    manager = models.ForeignKey(MyManager, models.CASCADE, null=True,
+                                related_name='reports')
 
     @property
     def is_open(self):

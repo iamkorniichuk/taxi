@@ -4,10 +4,8 @@ from django.views.generic import DetailView, RedirectView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .modes import set_mode
-from .apps import AccountsConfig
+from .apps import APP_NAME
 from .models import *
-
-APP_NAME = AccountsConfig.name
 
 
 class CustomerDetailView(DetailView):

@@ -1,4 +1,3 @@
-from datetime import datetime
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
@@ -19,7 +18,7 @@ class Trip(models.Model):
     @property
     def is_completed(self):
         return self.end_datetime != None
-    
+
     @property
     def wait_time(self):
         if self.is_completed:
@@ -31,6 +30,6 @@ class Trip(models.Model):
         if self.is_completed:
             return self.end_datetime - self.start_datetime
         return False
-    
+
     def __str__(self) -> str:
         return self.order.__str__()
