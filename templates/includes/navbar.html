@@ -1,12 +1,24 @@
+{% load modes %}
+
 <header>
-    <nav>
-        <a href="{% url 'home' %}">Home</a>
-        {% if user.is_authenticated %}
-        <a href="{% url 'accounts:my' %}">My Account</a>
-        <a href="{% url 'my_auth:logout' %}">Log Out</a>
-        {% else %}
-        <a href="{% url 'my_auth:login' %}">Log In</a>
-        <a href="{% url 'my_auth:signup' %}">Sign Up</a>
-        {% endif %}
-    </nav>
+  <nav>
+    <a href="{% url 'home' %}">Home</a>
+    {% if user.is_authenticated %}
+    <a href="{% url 'accounts:my' %}">My Account</a>
+    {% modes user as modes %}
+    {% for mode in modes %}
+        {% with mode.model_name as name %}
+        <form action="{% url 'accounts:mode' %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <input type="hidden" name="mode_name" value="{{ name }}" readonly="readonly">
+            <button type="submit">Set {{ name }} mode</button>
+        </form>
+        {% endwith %}
+    {% endfor %}
+    <a href="{% url 'my_auth:logout' %}">Log Out</a>
+    {% else %}
+    <a href="{% url 'my_auth:login' %}">Log In</a>
+    <a href="{% url 'my_auth:signup' %}">Sign Up</a>
+    {% endif %}
+  </nav>
 </header>

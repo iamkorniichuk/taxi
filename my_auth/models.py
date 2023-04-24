@@ -34,18 +34,18 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'phone'
 
     def __init__(self, *args, **kwargs):
-        '''Instance attributes created according to default_related_name of account's constant ROLES'''
-        from accounts.models import ROLES
-        for role in ROLES:
-            setattr(self, f'is_{role.model_name}',
-                    lambda: self.__is_related__(role))
+        '''Instance attributes created according to default_related_name of account's constant ACCOUNTS'''
+        from accounts.models import ACCOUNTS
+        for account in ACCOUNTS:
+            setattr(self, f'is_{account.model_name}',
+                    lambda: self.is_related(account))
         super().__init__(*args, **kwargs)
 
     @property
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
 
-    def __is_related__(self, model: models.Model) -> bool:
+    def is_related(self, model: type[models.Model]) -> bool:
         return model.objects.filter(user=self).first() != None
 
     def __str__(self) -> str:

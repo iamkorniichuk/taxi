@@ -1,11 +1,10 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.urls import reverse_lazy
 from datetime import datetime
 
-from django.urls import reverse_lazy
 
-
-class Profile(models.Model):
+class Account(models.Model):
     class Meta:
         abstract = True
 
@@ -22,16 +21,17 @@ class Profile(models.Model):
     @property
     def home_url(self):
         return reverse_lazy(self.path_name)
-    
+
+    @classmethod
     @property
-    def model_name(self):
-        return self._meta.default_related_name or self._meta.model_name
+    def model_name(cls):
+        return cls._meta.default_related_name or cls._meta.model_name
 
     def __str__(self) -> str:
         return self.user.__str__()
 
 
-class Customer(Profile):
+class Customer(Account):
     path_name = 'orders:create'
 
     class Meta:
@@ -40,7 +40,7 @@ class Customer(Profile):
         verbose_name_plural = default_related_name + 's'
 
 
-class Employee(Profile):
+class Employee(Account):
     class Meta:
         abstract = True
 
@@ -86,5 +86,5 @@ class Driver(Employee):
         return ''
 
 
-ROLES: list[Profile] = [Customer, Driver, MyManager, MyDirector]
+ACCOUNTS: list[Account] = [Customer, Driver, MyManager, MyDirector]
 '''Non-abstract account models in order of increasing permissions'''

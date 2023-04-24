@@ -1,14 +1,10 @@
 from django.views.generic import RedirectView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from accounts.modes import get_mode
 
 
-class HomeRedirectView(RedirectView, LoginRequiredMixin):
+class HomeRedirectView(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
-        user = self.request.user
-        home_url = None
-        # TODO: To end
-        if user.is_driver:
-            home_url = user.driver.home_url
-        elif user.is_customer:
-            home_url = user.customer.home_url
-        return home_url
+        request = self.request
+        profile_mode = get_mode(request)
+        return profile_mode.home_url
