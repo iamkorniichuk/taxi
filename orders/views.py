@@ -30,7 +30,6 @@ class AcceptOrderView(LoginRequiredMixin, ListView):
     model = Order
     template_name = APP_NAME + '/accept_list.html'
     context_object_name = 'orders'
-    # TODO: provide valid url
     success_accept_url = 'trips:detail'
 
     def get_queryset(self):

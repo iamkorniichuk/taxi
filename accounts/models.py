@@ -64,7 +64,7 @@ class MyDirector(Employee):
 
 class MyManager(Employee):
     # TODO: Provide valid path
-    path_name = 'orders:accept_list'
+    path_name = 'reports:accept_list'
 
     director = models.ForeignKey(MyDirector, on_delete=models.RESTRICT,
                                  related_name='managers')
