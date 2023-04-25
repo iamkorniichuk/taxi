@@ -1,2 +1,5 @@
-<div><img src="{{ user.image.url }}" alt="Image" style="height: 500px"></div>
-<div>{{ user.full_name }}</div>
+<div><img src="{{ account.image.url }}" alt="Image" style="height: 500px"></div>
+<div>{{ account.full_name }}</div>
+{% if user == account %}
+<a href="{% url 'my_auth:update' %}">Edit</a>
+{% endif %}

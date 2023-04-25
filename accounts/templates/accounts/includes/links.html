@@ -1,12 +1,12 @@
-{% if user.is_customer %}
-    <a href="{% url 'accounts:customer' user.id %}">Customer</a>
+{% if account.is_customer %}
+    <a href="{% url 'accounts:customer' account.id %}">Customer</a>
 {% endif %}
-{% if user.is_driver %}
-    <a href="{% url 'accounts:driver' user.id %}">Driver</a>
+{% if account.is_driver %}
+    <a href="{% url 'accounts:driver' account.id %}">Driver</a>
 {% endif %}
-{% if user.is_manager %}
-    <a href="{% url 'accounts:manager' user.id %}">Manager</a>
+{% if account.is_manager %}
+    <a href="{% url 'accounts:manager' account.id %}">Manager</a>
 {% endif %}
-{% if user.is_director %}
-    <a href="{% url 'accounts:director' user.id %}">Director</a>
+{% if account.is_director %}
+    <a href="{% url 'accounts:director' account.id %}">Director</a>
 {% endif %}

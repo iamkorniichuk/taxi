@@ -4,7 +4,7 @@
   <nav>
     <a href="{% url 'home' %}">Home</a>
     {% if user.is_authenticated %}
-    <a href="{% url 'accounts:my' %}">My Account</a>
+    <a href="{% url 'accounts:me' %}">My Account</a>
     {% modes user as modes %}
     {% for mode in modes %}
         {% with mode.model_name as name %}
