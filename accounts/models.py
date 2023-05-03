@@ -1,7 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from datetime import datetime
+
+from accounts.apps import APP_NAME
 
 
 class Account(models.Model):
@@ -18,6 +20,10 @@ class Account(models.Model):
     def joined_for(self):
         return (datetime.now().date() - self.join_date).days
 
+    @property
+    def get_absolute_url(self):
+        return reverse(f'{APP_NAME}:{self.model_name}', kwargs={"pk": self.pk})
+    
     @property
     def home_url(self):
         return reverse_lazy(self.path_name)

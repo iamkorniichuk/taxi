@@ -33,6 +33,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'phone'
 
+    accounts = []
+
     def __init__(self, *args, **kwargs):
         '''Instance attributes created according to default_related_name of account's constant ACCOUNTS'''
         from accounts.models import ACCOUNTS
@@ -47,6 +49,15 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def is_related(self, model: type[models.Model]) -> bool:
         return model.objects.filter(user=self).first() != None
+    
+    @property
+    def accounts(self):
+        result = []
+        from accounts.models import ACCOUNTS
+        for account in ACCOUNTS:
+            if self.is_related(account):
+                result.append(account.objects.filter(user=self).first())
+        return result
 
     def __str__(self) -> str:
         return self.phone if self.full_name.isspace() else self.full_name

@@ -2,7 +2,7 @@ from django.contrib.auth.views import LoginView as BaseLoginView, LogoutView as 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView as BaseUpdateView
 from django.contrib.auth import login
 
 
@@ -12,6 +12,7 @@ from .forms import *
 
 class LogInView(BaseLoginView):
     template_name = APP_NAME + '/login.html'
+    form_class = LogInForm
 
 
 class SignUpView(CreateView):
@@ -25,10 +26,10 @@ class SignUpView(CreateView):
         return HttpResponseRedirect(self.success_url)
 
 
-class UserUpdateView(LoginRequiredMixin, UpdateView):
+class UpdateView(LoginRequiredMixin, BaseUpdateView):
     model = get_user_model()
-    template_name = APP_NAME + '/update_user.html'
-    fields = ('first_name', 'last_name', 'image')
+    template_name = APP_NAME + '/update.html'
+    form_class = UpdateForm
     success_url = reverse_lazy('accounts:me')
 
     def get_object(self, queryset=None):

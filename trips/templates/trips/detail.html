@@ -1,9 +1,31 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<p>{{ trip }}</p>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">End</button>
-</form>
+<div class="card">
+    <div class="card-body">
+        {% with trip.order as order %}
+        <h5 class="card-title">{{ order.distance }} km for {{ order.price }} UAH</h5>
+            <div>Stops:
+                <ul>
+                    {% for stop in order.stops %}
+                        <li>{{ stop }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% if order.note %}
+                <figure class="note note-success p-4">
+                    <blockquote class="blockquote">
+                        {{ order.note }}
+                    </blockquote>
+                </figure>
+            {% endif %}
+        {% endwith %}
+    </div>
+    <div class="card-footer">
+        <form method="post">
+            {% csrf_token %}
+            <button class="btn btn-primary w-100" type="submit">End</button>
+        </form>
+    </div>
+</div>
 {% endblock content %}

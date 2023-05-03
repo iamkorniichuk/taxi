@@ -14,27 +14,8 @@ class MeRedirectView(RedirectView):
         return reverse(APP_NAME + ':customer', args=[pk])
 
 
-class CustomerDetailView(DetailView):
-    model = Customer
-    template_name = APP_NAME + '/customer.html'
-    context_object_name = 'account'
-
-
-class DriverDetailView(DetailView):
-    model = Driver
-    template_name = APP_NAME + '/driver.html'
-    context_object_name = 'account'
-
-
-class ManagerDetailView(DetailView):
-    model = MyManager
-    template_name = APP_NAME + '/manager.html'
-    context_object_name = 'account'
-
-
-class DirectorDetailView(DetailView):
-    model = MyDirector
-    template_name = APP_NAME + '/director.html'
+class AccountDetailView(DetailView):
+    template_name = APP_NAME + '/account.html'
     context_object_name = 'account'
 
 

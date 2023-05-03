@@ -1,3 +1,4 @@
+from commons.forms import BootstrapForm
 from orders.models import Order
 from django.contrib.gis import forms
 
@@ -9,11 +10,10 @@ class MapWidget(forms.OSMWidget):
         })
 
 
-class CreateOrderForm(forms.ModelForm):
+class CreateOrderForm(forms.ModelForm, BootstrapForm):
     class Meta:
         model = Order
         fields = '__all__'
         exclude = ('customer', )
 
-    start_point = forms.PointField(widget=MapWidget())
-    end_point = forms.PointField(widget=MapWidget())
+    _stops = forms.MultiPointField(widget=MapWidget())
