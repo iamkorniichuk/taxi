@@ -1,6 +1,6 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 from trips.models import Trip
-from accounts.models import MyManager
 
 
 class Report(models.Model):
@@ -9,8 +9,8 @@ class Report(models.Model):
     report_datetime = models.DateTimeField(auto_now=True, editable=False)
     answer = models.TextField(max_length=256, blank=True, default='')
     complete_datetime = models.DateTimeField(null=True)
-    manager = models.ForeignKey(MyManager, models.CASCADE, null=True,
-                                related_name='reports')
+    manager = models.ForeignKey(get_user_model(), models.CASCADE, null=True,
+                                limit_choices_to={'groups__name': 'manager'}, related_name='reports')
 
     @property
     def is_open(self):

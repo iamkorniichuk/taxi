@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card" style="width: 80vh;">
+    <img src="{{ profile.image.url }}" alt="{{ profile.image.url }}">
+    <div class="card-body">
+       <div class="card-title d-flex justify-content-between">
+            <h5>{{ profile.full_name }}</h5>
+            {% if user == profile %}
+                <a class="btn btn-primary" href="{% url 'users:update' %}">Edit</a>
+            {% endif %}
+       </div>
+    </div>
+</div>
+{% endblock content %}

@@ -8,7 +8,7 @@ from .models import Report
 from .apps import APP_NAME
 
 
-class AcceptReportView(LoginRequiredMixin, ListView):
+class ReportAcceptView(LoginRequiredMixin, ListView):
     model = Report
     template_name = APP_NAME + '/accept_list.html'
     context_object_name = 'reports'

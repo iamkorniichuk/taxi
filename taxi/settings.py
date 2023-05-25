@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
-from django.urls import reverse_lazy
 from django.core.management.utils import get_random_secret_key
 from pathlib import Path
 import os
@@ -42,12 +41,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'my_auth',
-    'accounts',
-    'orders',
-    'cars',
-    'trips',
-    'reports',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -55,6 +48,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
+    
+    'users',
+    'orders',
+    'cars',
+    'trips',
+    'reports',
+    'accounts',
+    'groups',
 ]
 
 MIDDLEWARE = [
@@ -138,11 +139,11 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-LOGIN_URL = reverse_lazy('my_auth:login')
-LOGIN_REDIRECT_URL = reverse_lazy('home')
-LOGOUT_REDIRECT_URL = reverse_lazy('my_auth:login')
+LOGIN_URL = 'users:login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'users:login'
 
-AUTH_USER_MODEL = 'my_auth.User'
+AUTH_USER_MODEL = 'users.User'
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [

@@ -1,23 +1,16 @@
 from django.contrib.gis.db import models
-from geopy.geocoders import Nominatim
+from django.contrib.auth import get_user_model
 
-from accounts.models import Customer
+from commons.fields import MoneyField
+from commons.geo import geolocator
 from cars.models import TypeChoices, ClassChoices
 
 
-geolocator = Nominatim(user_agent='taxi')
-
-MONEY_KWARGS = {
-    'max_digits': 10,
-    'decimal_places': 2
-}
-
-
 class Order(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE,
-                                 related_name='orders')
+    customer = models.ForeignKey(get_user_model(), on_delete=models.CASCADE,
+                                 limit_choices_to={'groups__name': 'customer'}, related_name='orders')
     _stops = models.MultiPointField()
-    price = models.DecimalField(**MONEY_KWARGS)
+    price = MoneyField()
     note = models.TextField(max_length=128, blank=True)
     datetime = models.DateTimeField(auto_now=True)
     car_type = models.CharField(max_length=5, choices=TypeChoices.choices,
@@ -33,6 +26,8 @@ class Order(models.Model):
         self._stops = value
 
     def get_stops(self):
+        # TODO: Wrong stops name
+        # TODO: Slow loading
         addresses = []
         for stop in self._stops:
             couroutine = geolocator.reverse(stop, language='en', timeout=None)

@@ -22,10 +22,9 @@ from .views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(('my_auth.urls', 'my_auth'))),
+    path('', include(('users.urls', 'users'))),
     path('', HomeRedirectView.as_view(), name='home'),
-    path('accounts/', include(('accounts.urls', 'accounts'))),
-    path('orders/', include(('orders.urls', 'orders'))),
-    path('trips/', include(('trips.urls', 'trips'))),
-    path('reports/', include(('reports.urls', 'reports'))),
+    path('orders/', include('orders.urls')),
+    path('trips/', include('trips.urls')),
+    path('reports/', include('reports.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

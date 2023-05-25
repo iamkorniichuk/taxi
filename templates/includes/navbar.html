@@ -1,35 +1,19 @@
-{% load modes %}
-
 <header>
   <nav class="navbar navbar-expand navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'home' %}">Home</a>
+      <ul class="navbar-nav">
+        {% for account in user.accounts.all %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url account.group.home_url %}">{{ account.group|title }}</a>
+          </li>
+        {% endfor %}
+      </ul>
       <ul class="navbar-nav">
         {% if user.is_authenticated %}
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            My Account
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <a class="dropdown-item" href="{% url 'accounts:me' %}">Account</a>
-            <li><hr class="dropdown-divider"></li>
-            {% modes user as modes %}
-            {% for mode in modes %}
-                {% with mode.model_name as name %}
-                <form action="{% url 'accounts:mode' %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="mode_name" value="{{ name }}" readonly="readonly">
-                    <button class="dropdown-item" type="submit">Set {{ name  }} mode</button>
-                </form>
-                {% endwith %}
-            {% endfor %}
-            <li><hr class="dropdown-divider"></li>
-            <a class="dropdown-item" href="{% url 'my_auth:logout' %}">Log Out</a>
-          </ul>
-        </li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'users:my_profile' %}">Profile</a></li>
         {% else %}
-        <li class="nav-item"><a class="nav-link" href="{% url 'my_auth:login' %}">Log In</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'my_auth:signup' %}">Sign Up</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'users:login' %}">Log In</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'users:signup' %}">Sign Up</a></li>
         {% endif %}
       </ul>
     </div>

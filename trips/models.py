@@ -1,19 +1,21 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, MaxValueValidator
 
-from orders.models import Order, MONEY_KWARGS
-from accounts.models import Driver
+from commons.fields import MoneyField
+from orders.models import Order
 
 
 class Trip(models.Model):
     order = models.OneToOneField(Order, models.CASCADE, related_name='trip')
-    driver = models.ForeignKey(Driver, models.CASCADE, related_name='trips')
+    driver = models.ForeignKey(get_user_model(), models.CASCADE,
+                               limit_choices_to={'groups__name': 'driver'}, related_name='trips')
     start_datetime = models.DateTimeField(auto_now=True)
     end_datetime = models.DateTimeField(null=True)
     rating = models.PositiveSmallIntegerField(null=True, validators=[
         MinValueValidator(1), MaxValueValidator(5)
     ])
-    tip = models.DecimalField(null=True, **MONEY_KWARGS)
+    tip = MoneyField(null=True)
 
     @property
     def is_completed(self):

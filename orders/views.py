@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from trips.models import Trip
@@ -10,7 +10,7 @@ from .apps import APP_NAME
 from .forms import *
 
 
-class CreateOrderView(LoginRequiredMixin, CreateView):
+class OrderCreateView(LoginRequiredMixin, CreateView):
     model = Order
     form_class = CreateOrderForm
     template_name = APP_NAME + '/create.html'
@@ -19,12 +19,12 @@ class CreateOrderView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         instance = form.save(commit=False)
-        instance.customer = self.request.user.customer
+        instance.customer = self.request.user
         instance.save()
         return super().form_valid(form)
 
 
-class AcceptOrderView(LoginRequiredMixin, ListView):
+class OrderAcceptView(LoginRequiredMixin, ListView):
     model = Order
     template_name = APP_NAME + '/accept_list.html'
     context_object_name = 'orders'
@@ -36,6 +36,6 @@ class AcceptOrderView(LoginRequiredMixin, ListView):
     def post(self, request, *args, **kwargs):
         order_pk = request.POST.get('order_pk', None)
         order = Order.objects.filter(pk=order_pk).first()
-        driver = request.user.driver
+        driver = request.user
         Trip.objects.create(order=order, driver=driver)
         return HttpResponseRedirect(reverse_lazy(self.success_accept_url, args=[order_pk]))
