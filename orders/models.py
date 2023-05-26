@@ -1,9 +1,12 @@
 from django.contrib.gis.db import models
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 from commons.fields import MoneyField
 from commons.geo import geolocator
 from cars.models import TypeChoices, ClassChoices
+
+from .apps import APP_NAME
 
 
 class Order(models.Model):
@@ -17,6 +20,10 @@ class Order(models.Model):
                                 default=TypeChoices.BASIC)
     car_class = models.CharField(max_length=5, choices=ClassChoices.choices,
                                  default=ClassChoices.BASIC)
+    
+    def get_absolute_url(self):
+        return reverse(APP_NAME + ':detail', kwargs={'pk': self.pk})
+    
 
     @property
     def is_open(self):

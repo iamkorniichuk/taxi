@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">{{ order.distance }} km for {{ order.price }} UAH</h5>
+        <div>Stops:
+            <ul>
+                {% for stop in order.stops %}
+                    <li>{{ stop }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% if order.note %}
+            <figure class="note note-success p-4">
+                <blockquote class="blockquote">
+                    {{ order.note }}
+                </blockquote>
+            </figure>
+        {% endif %}
+        <div>{{ order.get_car_type_display }} type</div>
+        <div>{{ order.get_car_class_display }} class</div>
+    </div>
+    <div class="card-footer">
+        <form method="post" action="{% url 'orders:cancel' %}">
+            {% csrf_token %}
+            <input type="hidden" name="pk" value="{{ order.pk }}" readonly="readonly">
+            <button class="btn btn-primary w-100" type="submit">Cancel</button>
+        </form>
+    </div>
+</div>
+{% endblock content %}
