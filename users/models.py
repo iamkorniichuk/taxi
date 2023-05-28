@@ -45,6 +45,12 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return self.is_superuser
 
+    def has_group(self, group) -> bool:
+        if self.is_superuser:
+            return True
+
+        return self.accounts.get(group=group) == None
+
     @property
     def groups(self):
         result = [account.group for account in self.accounts.all()]

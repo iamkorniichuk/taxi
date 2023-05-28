@@ -8,8 +8,7 @@ from orders.models import Order
 
 class Trip(models.Model):
     order = models.OneToOneField(Order, models.CASCADE, related_name='trip')
-    driver = models.ForeignKey(get_user_model(), models.CASCADE,
-                               limit_choices_to={'groups__name': 'driver'}, related_name='trips')
+    driver = models.ForeignKey(get_user_model(), models.CASCADE, related_name='trips')
     start_datetime = models.DateTimeField(auto_now=True)
     end_datetime = models.DateTimeField(null=True)
     rating = models.PositiveSmallIntegerField(null=True, validators=[

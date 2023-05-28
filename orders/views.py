@@ -1,10 +1,13 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, ListView, DetailView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import Group
 
 from trips.models import Trip
+from commons.decorators import group_required
 
 from .models import Order
 from .apps import APP_NAME
@@ -32,6 +35,9 @@ class OrderCreateView(LoginRequiredMixin, CreateView):
         return self.object.get_absolute_url()
 
 
+DRIVER_GROUP = Group.objects.get(name='driver')
+
+
 class OrderAcceptView(LoginRequiredMixin, ListView):
     model = Order
     template_name = APP_NAME + '/accept_list.html'
@@ -39,8 +45,9 @@ class OrderAcceptView(LoginRequiredMixin, ListView):
     success_accept_url = 'trips:detail'
 
     def get_queryset(self):
-        return [order for order in self.model.objects.all() if order.is_open]
+        return self.model.objects.filter(trip__order=None)
 
+    @method_decorator(group_required(group=DRIVER_GROUP))
     def post(self, request, *args, **kwargs):
         pk = request.POST.get('pk', None)
         order = Order.objects.get(pk=pk)
@@ -49,11 +56,17 @@ class OrderAcceptView(LoginRequiredMixin, ListView):
         return HttpResponseRedirect(reverse_lazy(self.success_accept_url, args=[pk]))
 
 
+CUSTOMER_GROUP = Group.objects.get(name='customer')
+
+
 class OrderCancelView(LoginRequiredMixin, View):
     success_url = APP_NAME + ':create'
 
+    @method_decorator(group_required(group=CUSTOMER_GROUP))
     def post(self, request, *args, **kwargs):
         pk = request.POST.get('pk', None)
         order = Order.objects.get(pk=pk)
-        order.delete()
-        return redirect(reverse(self.success_url))
+        if request.user == order.customer:
+            order.delete()
+            return redirect(reverse(self.success_url))
+        raise HttpResponseForbidden
