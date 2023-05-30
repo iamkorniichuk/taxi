@@ -1,28 +1,31 @@
-from django.http import HttpResponseRedirect, HttpResponseForbidden
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
-from django.utils.decorators import method_decorator
-from django.views.generic import CreateView, ListView, DetailView, View
+from django.views.generic import CreateView, ListView, DetailView
+from django.views.decorators.http import require_POST
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from trips.models import Trip
-from commons.decorators import any_perm_required
+from commons.decorators import perm_required
+from commons.mixins import PermissionRequiredMixin
 
 from .models import Order
 from .apps import APP_NAME
 from .forms import *
 
-
+# TODO: Restrict view for non related users
 class OrderDetailView(LoginRequiredMixin, DetailView):
     model = Order
     template_name = APP_NAME + '/detail.html'
     context_object_name = 'order'
 
 
-class OrderCreateView(LoginRequiredMixin, CreateView):
+class OrderCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Order
     form_class = CreateOrderForm
     template_name = APP_NAME + '/create.html'
+
+    required_perm = 'add_order'
 
     def form_valid(self, form):
         instance = form.save(commit=False)
@@ -33,34 +36,34 @@ class OrderCreateView(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return self.object.get_absolute_url()
 
-# TODO: Create one listview, alter buttons due to user's groups, separate actions to post views
-class OrderAcceptView(LoginRequiredMixin, ListView):
+
+class OrderListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Order
-    template_name = APP_NAME + '/accept_list.html'
+    template_name = APP_NAME + '/list.html'
     context_object_name = 'orders'
-    success_accept_url = 'trips:detail'
 
-    def get_queryset(self):
-        return self.model.objects.filter(trip__order=None)
-
-    # TODO: Check
-    @method_decorator(any_perm_required(APP_NAME + '.accept_order'))
-    def post(self, request, *args, **kwargs):
-        pk = request.POST.get('pk', None)
-        order = Order.objects.get(pk=pk)
-        driver = request.user
-        Trip.objects.create(order=order, driver=driver)
-        return HttpResponseRedirect(reverse_lazy(self.success_accept_url, args=[pk]))
+    required_perm = 'view_order'
 
 
-class OrderCancelView(LoginRequiredMixin, View):
-    success_url = APP_NAME + ':create'
+@require_POST
+@perm_required('accept_order')
+def order_accept_view(request, *args, **kwargs):
+    pk = request.POST.get('pk')
+    order = Order.objects.get(pk=pk)
+    driver = request.user
+    Trip.objects.create(order=order, driver=driver)
 
-    @method_decorator(any_perm_required(APP_NAME + '.cancel_order'))
-    def post(self, request, *args, **kwargs):
-        pk = request.POST.get('pk', None)
-        order = Order.objects.get(pk=pk)
-        if request.user == order.customer:
-            order.delete()
-            return redirect(reverse(self.success_url))
-        raise HttpResponseForbidden
+    success_url = reverse('trips:detail', args=[pk])
+    return HttpResponseRedirect(success_url)
+
+
+@require_POST
+def order_cancel_view(request, *args, **kwargs):
+    pk = request.POST.get('pk')
+    order = Order.objects.get(pk=pk)
+
+    order.has_user_in_field(request.user, 'customer', is_safe=False)
+    order.delete()
+    
+    success_url = reverse(APP_NAME + ':create')
+    return redirect(success_url)

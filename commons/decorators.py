@@ -14,10 +14,7 @@ def forbid_decorator(test_func):
     return decorator
 
 
-def any_perm_required(*perms):
-    def check_perms(user, *perms):
-        for perm in perms:
-            if user.has_perm(perm):
-                return True
-        return False
-    return forbid_decorator(check_perms)
+def perm_required(perm):
+    def check_perm(user, perm=None):
+        return user.has_perm(perm)
+    return forbid_decorator(check_perm)

@@ -1,12 +1,14 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.core.validators import RegexValidator
 from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class UserManager(BaseUserManager):
     def create_user(self, phone, password=None, **kwargs):
         user = self.model(phone=phone, **kwargs)
         user.set_password(password)
+        user
         user.save()
         return user
 
@@ -34,13 +36,16 @@ class User(AbstractBaseUser):
     USERNAME_FIELD = 'phone'
 
     # TODO: To improve perfomance
-    def has_perm(self, perm: str, obj=None) -> bool:
+    def has_perm(self, perm: str) -> bool:
         if self.is_superuser:
             return True
         
         for group in self.groups:
-            if perm in group.permissions.all():
+            try:
+                group.permissions.get(codename=perm)
                 return True
+            except ObjectDoesNotExist:
+                continue
         return False
     
     def has_module_perms(self, app_label):

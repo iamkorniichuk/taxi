@@ -1,29 +1,32 @@
-from django.utils.decorators import method_decorator
+from django.views.decorators.http import require_POST
 from django.http import HttpResponseRedirect
-from django.urls import reverse_lazy
+from django.urls import reverse
 from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from commons.decorators import any_perm_required
+from commons.decorators import perm_required
+from commons.mixins import PermissionRequiredMixin
 
 from .models import Report
 from .apps import APP_NAME
 
 
-class ReportAcceptView(LoginRequiredMixin, ListView):
+class ReportListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Report
-    template_name = APP_NAME + '/accept_list.html'
+    template_name = APP_NAME + '/list.html'
     context_object_name = 'reports'
-    success_accept_url = ''
 
-    # TODO: Improve performance
-    def get_queryset(self):
-        return [report for report in self.model.objects.all() if report.is_open]
+    required_perm = 'view_report'
 
-    @method_decorator(any_perm_required(APP_NAME + '.accept_' + model.__name__))
-    def post(self, request, *args, **kwargs):
-        report_pk = request.POST.get('report_pk', None)
-        report = Report.objects.filter(pk=report_pk).first()
-        report.manager = request.user.manager
-        report.save()
-        return HttpResponseRedirect(reverse_lazy(self.success_accept_url, args=[report_pk]))
+
+@require_POST
+@perm_required('accept_report')
+def report_accept_view(request, *args, **kwargs):
+    pk = request.POST.get('pk')
+    report = Report.objects.get(pk=pk)
+    report.manager = request.user
+    report.save()
+
+    # TODO: Provide valid url
+    success_url = reverse(APP_NAME + ':detail', args=[pk])
+    return HttpResponseRedirect(success_url)

@@ -2,7 +2,6 @@
   <nav class="navbar navbar-expand navbar-light bg-light">
     <div class="container-fluid">
       <ul class="navbar-nav">
-        {% comment %} // TODO: Alter options due to view model's permission {% endcomment %}
         {% for account in user.accounts.all %}
           <li class="nav-item">
             <a class="nav-link" href="{% url account.group.home_url %}">{{ account.group|title }}</a>

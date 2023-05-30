@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load user_methods %}
+
+{% block content %}
+{% for report in reports  %}
+    <div style="border: 1px solid black">
+        <div>Trip: {{ report.trip }}</div>
+        <div>Message: {{ report.message }}</div>
+        <div>Date and Time: {{ report.report_datetime }}</div>
+        {% has_perm 'accept_report' as can_accept_report %}
+        {% if can_accept_report %}
+            <form action="{% url 'reports:accept' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="pk" value="{{ report.pk }}" readonly="readonly">
+                <div><button type="submit">Accept</button></div>
+            </form>
+        {% endif %}
+    </div>
+{% endfor %}
+{% endblock content %}

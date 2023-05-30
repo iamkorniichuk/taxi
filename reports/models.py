@@ -12,7 +12,7 @@ class Report(UserRelatedModel):
     report_datetime = models.DateTimeField(auto_now=True, editable=False)
     answer = models.TextField(max_length=256, blank=True, default='')
     complete_datetime = models.DateTimeField(null=True)
-    manager = models.ForeignKey(get_user_model(), models.CASCADE, null=True,
+    manager = models.ForeignKey(get_user_model(), models.CASCADE, null=True, blank=True,
                                 related_name='reports')
 
     class Meta:

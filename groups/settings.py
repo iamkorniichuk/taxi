@@ -15,7 +15,7 @@ DEFAULT_GROUPS = [
             'view_order',
             'accept_order'
         ],
-        'home_url': 'orders:accept'
+        'home_url': 'orders:list'
     },
     {
         'pk': 3,
@@ -28,7 +28,7 @@ DEFAULT_GROUPS = [
             'view_car',
             'change_car'
         ],
-        'home_url': 'reports:accept'
+        'home_url': 'reports:list'
     },
     {
         'pk': 4,
