@@ -16,6 +16,8 @@ class TripDetailView(LoginRequiredMixin, DetailView):
 
     def post(self, request, *args, **kwargs):
         trip = Trip.objects.get(pk=kwargs['pk'])
+        trip.has_user_in_any_field(request.user, ['customer', 'driver'],
+                                   is_safe=False)
         trip.end_datetime = timezone.now()
         trip.save()
         return HttpResponseRedirect(self.success_ended_url)

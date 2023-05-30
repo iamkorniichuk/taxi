@@ -2,13 +2,14 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, MaxValueValidator
 
-from commons.fields import MoneyField
+from commons.models import MoneyField, UserRelatedModel
 from orders.models import Order
 
 
-class Trip(models.Model):
+class Trip(UserRelatedModel):
     order = models.OneToOneField(Order, models.CASCADE, related_name='trip')
-    driver = models.ForeignKey(get_user_model(), models.CASCADE, related_name='trips')
+    driver = models.ForeignKey(get_user_model(), models.CASCADE,
+                               related_name='trips')
     start_datetime = models.DateTimeField(auto_now=True)
     end_datetime = models.DateTimeField(null=True)
     rating = models.PositiveSmallIntegerField(null=True, validators=[

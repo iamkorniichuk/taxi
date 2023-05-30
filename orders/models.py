@@ -2,16 +2,17 @@ from django.contrib.gis.db import models
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from commons.fields import MoneyField
+from commons.models import MoneyField, UserRelatedModel
 from commons.geo import geolocator
+
 from cars.models import TypeChoices, ClassChoices
 
 from .apps import APP_NAME
 
 
-class Order(models.Model):
+class Order(UserRelatedModel):
     customer = models.ForeignKey(get_user_model(), on_delete=models.CASCADE,
-                                 limit_choices_to={'groups__name': 'customer'}, related_name='orders')
+                                 related_name='orders')
     _stops = models.MultiPointField()
     price = MoneyField()
     note = models.TextField(max_length=128, blank=True)
@@ -20,10 +21,14 @@ class Order(models.Model):
                                 default=TypeChoices.BASIC)
     car_class = models.CharField(max_length=5, choices=ClassChoices.choices,
                                  default=ClassChoices.BASIC)
-    
+
+    class Meta:
+        permissions = [
+            ('accept_order', 'User can accept any open order')
+        ]
+
     def get_absolute_url(self):
         return reverse(APP_NAME + ':detail', kwargs={'pk': self.pk})
-    
 
     @property
     def is_open(self):

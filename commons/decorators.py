@@ -14,7 +14,10 @@ def forbid_decorator(test_func):
     return decorator
 
 
-def group_required(group):
-    def check_group(user, *args, **kwargs):
-        return user.has_group(group)
-    return forbid_decorator(check_group)
+def any_perm_required(*perms):
+    def check_perms(user, *perms):
+        for perm in perms:
+            if user.has_perm(perm):
+                return True
+        return False
+    return forbid_decorator(check_perms)

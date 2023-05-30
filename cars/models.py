@@ -2,6 +2,8 @@ from datetime import datetime
 from django.db import models
 from django.contrib.auth import get_user_model
 
+from commons.models import UserRelatedModel
+
 
 class TypeChoices(models.TextChoices):
     BASIC = 'B', 'Basic'
@@ -30,10 +32,10 @@ class ColorChoices(models.TextChoices):
 YEAR_CHOICES = [(y, y) for y in range(1980, datetime.now().year)]
 
 
-class Car(models.Model):
+class Car(UserRelatedModel):
     number = models.CharField(max_length=12, unique=True)
     driver = models.ForeignKey(get_user_model(), on_delete=models.CASCADE,
-                               limit_choices_to={'groups__name': 'driver'}, related_name='cars')
+                               related_name='cars')
     brand = models.CharField(max_length=32, blank=False)
     model = models.CharField(max_length=32, blank=False)
     type = models.CharField(max_length=5, choices=TypeChoices.choices,

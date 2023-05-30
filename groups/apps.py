@@ -4,18 +4,25 @@ from django.apps import AppConfig
 from .settings import DEFAULT_GROUPS
 
 
-def __create_group__(name, permissions, **kwargs):
+def create_group(name, permissions, **kwargs):
     from django.contrib.auth.models import Group
     obj, created = Group.objects.get_or_create(
         name=name,
         **kwargs
     )
-    obj.permissions.set(permissions)
+
+    for permission in permissions:
+        obj.permissions.add(get_perm_pk(permission))
+
+
+def get_perm_pk(name) -> int:
+    from django.contrib.auth.models import Permission
+    return Permission.objects.get(codename=name).pk
 
 
 def create_default_groups(sender, **kwargs):
     for group in DEFAULT_GROUPS:
-        __create_group__(**group)
+        create_group(**group)
 
 
 class GroupsConfig(AppConfig):

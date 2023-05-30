@@ -33,6 +33,7 @@ class User(AbstractBaseUser):
 
     USERNAME_FIELD = 'phone'
 
+    # TODO: To improve perfomance
     def has_perm(self, perm: str, obj=None) -> bool:
         if self.is_superuser:
             return True
