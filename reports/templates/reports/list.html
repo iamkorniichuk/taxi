@@ -12,15 +12,12 @@
                 {{ report.message }}
             </blockquote>
         </figure>
-    </div>
-    <div class="card-footer">
-        {% has_perm  'accept_report' as can_accept_report %}
-        {% if can_accept_report %}
-            <form method="post" action="{% url 'reports:accept' %}">
-                {% csrf_token %}
-                <input type="hidden" name="pk" value="{{ report.pk }}" readonly="readonly">
-                <button class="btn btn-primary w-100" type="submit">Accept</button>
-            </form>
+        {% if report.answer %}
+            <figure class="note note-success p-4">
+                <blockquote class="blockquote">
+                    {{ report.answer }}
+                </blockquote>
+            </figure>
         {% endif %}
     </div>
 {% endfor %}

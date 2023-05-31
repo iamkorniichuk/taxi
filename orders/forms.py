@@ -1,7 +1,8 @@
-from commons.forms import BootstrapForm
-from orders.models import Order
 from django.contrib.gis import forms
 
+from commons.forms import BootstrapForm
+
+from .models import Order
 
 class MapWidget(forms.OSMWidget):
     def __init__(self):

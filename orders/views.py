@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from django.views.generic import CreateView, ListView, DetailView
 from django.views.decorators.http import require_POST
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -31,7 +31,7 @@ class OrderCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         instance = form.save(commit=False)
         instance.customer = self.request.user
         instance.save()
-        return super().form_valid(form)
+        return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
         return self.object.get_absolute_url()

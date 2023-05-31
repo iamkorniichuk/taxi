@@ -24,6 +24,7 @@ DEFAULT_GROUPS = [
             'view_order',
             'view_trip',
             'view_report',
+            'answer_report',
             'add_car',
             'view_car',
             'change_car'

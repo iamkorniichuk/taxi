@@ -20,15 +20,11 @@ class Report(UserRelatedModel):
 
     class Meta:
         permissions = [
-            ('accept_report', 'Accept report')
+            ('answer_report', 'Can answer to any report')
         ]
 
     def get_absolute_url(self):
         return reverse(APP_NAME + ':detail', kwargs={'pk': self.pk})
-
-    @property
-    def is_open(self):
-        return self.manager == None
 
     @property
     def is_completed(self):

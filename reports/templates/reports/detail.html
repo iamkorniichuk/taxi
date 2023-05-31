@@ -2,7 +2,6 @@
 {% load user_methods %}
 
 {% block content %}
-{% comment %} // TODO: To end {% endcomment %}
 <div class="card">
     <div class="card-body">
         <h5 class="card-title">Report from {{ report.report_datetime }}</h5>
@@ -12,14 +11,21 @@
                 {{ report.message }}
             </blockquote>
         </figure>
+        {% if report.answer %}
+            <figure class="note note-success p-4">
+                <blockquote class="blockquote">
+                    {{ report.answer }}
+                </blockquote>
+            </figure>
+        {% endif %}
     </div>
     <div class="card-footer">
-        {% has_perm  'accept_report' as can_accept_report %}
-        {% if can_accept_report %}
-            <form method="post" action="{% url 'reports:accept' %}">
+        {% has_perm  'answer_report' as can_answer_report %}
+        {% if can_answer_report and not report.is_completed %}
+            <form method="post">
                 {% csrf_token %}
-                <input type="hidden" name="pk" value="{{ report.pk }}" readonly="readonly">
-                <button class="btn btn-primary w-100" type="submit">Accept</button>
+                {{ form.as_p }}
+                <button class="btn btn-primary w-100" type="submit">Send</button>
             </form>
         {% endif %}
     </div>
