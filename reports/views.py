@@ -1,7 +1,7 @@
 from django.views.decorators.http import require_POST
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from commons.decorators import perm_required
@@ -9,6 +9,13 @@ from commons.mixins import PermissionRequiredMixin
 
 from .models import Report
 from .apps import APP_NAME
+
+
+# TODO: Restrict view for non related users
+class ReportDetailView(LoginRequiredMixin, DetailView):
+    model = Report
+    template_name = APP_NAME + '/detail.html'
+    context_object_name = 'report'
 
 
 class ReportListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):

@@ -1,9 +1,12 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 from trips.models import Trip
 
 from commons.models import UserRelatedModel
+
+from .apps import APP_NAME
 
 
 class Report(UserRelatedModel):
@@ -19,6 +22,9 @@ class Report(UserRelatedModel):
         permissions = [
             ('accept_report', 'Accept report')
         ]
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME + ':detail', kwargs={'pk': self.pk})
 
     @property
     def is_open(self):

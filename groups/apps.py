@@ -6,9 +6,9 @@ from .settings import DEFAULT_GROUPS
 
 def create_group(name, permissions, **kwargs):
     from django.contrib.auth.models import Group
-    obj, created = Group.objects.get_or_create(
+    obj, created = Group.objects.update_or_create(
         name=name,
-        **kwargs
+        defaults=kwargs
     )
 
     for permission in permissions:

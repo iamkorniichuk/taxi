@@ -2,9 +2,9 @@
 {% load user_methods %}
 
 {% block content %}
-{% for report in reports  %}
-<div class="card m-3">
-    <div class="card-body" role="button" onclick="window.location='{{ report.get_absolute_url }}'">
+{% comment %} // TODO: To end {% endcomment %}
+<div class="card">
+    <div class="card-body">
         <h5 class="card-title">Report from {{ report.report_datetime }}</h5>
         <div>Driver: {{ report.trip.driver }} </div>
         <figure class="note note-success p-4">
@@ -23,5 +23,5 @@
             </form>
         {% endif %}
     </div>
-{% endfor %}
+</div>
 {% endblock content %}
