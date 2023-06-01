@@ -1,15 +1,104 @@
 {% extends 'base.html' %}
 
+{% load rating %}
+{% load utils %}
+{% load user_methods %}
+
+{% block title %}{{ profile.full_name }}{% endblock title %}
+
 {% block content %}
-<div class="card" style="width: 80vh;">
-    <img src="{{ profile.image.url }}" alt="{{ profile.image.url }}">
-    <div class="card-body">
-       <div class="card-title d-flex justify-content-between">
-            <h5>{{ profile.full_name }}</h5>
-            {% if user == profile %}
-                <a class="btn btn-primary" href="{% url 'users:update' %}">Edit</a>
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-4">
+
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <img class="rounded-circle img-fluid mb-3" style="width: 150px;"
+                    src="{{ profile.image.url }}" alt="{{ profile.first_name }}'s picture">
+                    <h5 class="d-flex justify-content-center align-items-center">
+                        <span class="px-3">{{ profile.full_name }}</span>
+                        {% if user == profile %}
+                            <a href="{% url 'users:update' %}">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                        {% endif %}
+                    </h5>
+                    <p class="text-muted d-flex justify-content-evenly mb-0">
+                        {% for group in profile.groups.all %}
+                        <span>{{ group.name }}</span>
+                        {% endfor %}
+                    </p>
+                </div>
+            </div>
+
+            {% if profile.rating %}
+                <div class="card mb-4">
+                    <div class="card-body text-center">
+                        <div class="d-flex justify-content-evenly mb-3">
+                            {% stars profile.rating as rating %}
+                            {% for star in rating %}
+                                {{ star|safe }}
+                            {% endfor %}
+                        </div>
+                        <h6>Average rating in {{ profile.rated_drives.count }} drives</h6>
+                    </div>
+                </div>
             {% endif %}
-       </div>
+            
+            {% if user == profile %}
+                <a class="btn btn-outline-danger w-100 mb-4" href="{% url 'users:logout' %}">Logout</a>
+            {% endif %}
+        </div>
+
+        {% if profile.trips %}
+            <div class="col-lg-8">
+                <h5>Recent trips:</h5>
+                {% for trip in profile.recent_trips %}
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <h5 class="card-title d-flex justify-content-between">
+                                <a class="plain-text" href="{{ trip.driver.get_absolute_url }}">
+                                    <i class="bi bi-car-front-fill"></i>
+                                    {{ trip.driver }}
+                                </a>
+                                <a class="plain-text" href="{{ trip.order.customer.get_absolute_url }}">
+                                    <i class="bi bi-person-fill"></i>
+                                    {{ trip.order.customer }}
+                                </a>
+                            </h5>
+                            {% if trip.is_completed %}
+                                <div class="d-flex justify-content-between">
+                                    <p>
+                                        <i class="bi bi-stopwatch"></i>
+                                        Completed in 
+                                        {{ trip.duration|delta:'{H}:{m}:{s}' }}
+                                    </p>
+                                    {% if trip.rating %}
+                                        <p>
+                                            {% stars trip.rating as rating %}
+                                            {% for star in rating %}
+                                                {{ star|safe }}
+                                            {% endfor %}
+                                        </p>
+                                    {% endif %}
+                                </div>
+                            {% else %}
+                                <p>
+                                    <i class="bi bi-x-circle"></i>
+                                    Haven't been completed
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+                {% if profile == user %}
+                <a class="btn btn-outline-primary w-100" href="{% url 'trips:list' %}">Show all</a>
+                {% endif %}
+            </div>
+        {% else %}
+
+        {% endif %}    
+
     </div>
 </div>
 {% endblock content %}

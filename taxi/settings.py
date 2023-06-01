@@ -144,9 +144,10 @@ LOGOUT_REDIRECT_URL = 'users:login'
 
 AUTH_USER_MODEL = 'users.User'
 
-STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'static_root/'
+STATIC_URL = 'statics/'
 STATICFILES_DIRS = [
-    BASE_DIR / STATIC_URL
+    BASE_DIR / 'static/'
 ]
 
 MEDIA_ROOT = BASE_DIR / 'images'
