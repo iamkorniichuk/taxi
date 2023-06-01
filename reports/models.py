@@ -16,7 +16,7 @@ class Report(UserRelatedModel):
     answer = models.TextField(max_length=256, blank=True, default='')
     complete_datetime = models.DateTimeField(null=True)
     manager = models.ForeignKey(get_user_model(), models.CASCADE, null=True, blank=True,
-                                related_name='reports')
+                                related_name='reports', limit_choices_to={'groups__name': 'manager'})
 
     class Meta:
         permissions = [

@@ -3,18 +3,13 @@ from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 from django.dispatch import receiver
 
-from accounts.models import Account
-
 
 @receiver(post_save, sender=get_user_model())
 def post_user_save(sender, instance, created, **kwargs):
     if created:
-        add_default_account(instance)
+        add_default_group(instance)
 
 
-def add_default_account(user):
+def add_default_group(user):
     group = Group.objects.first()
-    Account.objects.create(
-        user=user,
-        group=group
-    )
+    user.groups.add(group)

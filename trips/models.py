@@ -8,14 +8,14 @@ from orders.models import Order
 
 class Trip(UserRelatedModel):
     order = models.OneToOneField(Order, models.CASCADE, related_name='trip')
-    driver = models.ForeignKey(get_user_model(), models.CASCADE,
-                               related_name='trips')
+    driver = models.ForeignKey(get_user_model(), models.CASCADE, related_name='trips',
+                               limit_choices_to={'groups__name': 'driver'})
     start_datetime = models.DateTimeField(auto_now=True)
     end_datetime = models.DateTimeField(null=True)
-    rating = models.PositiveSmallIntegerField(null=True, validators=[
+    rating = models.PositiveSmallIntegerField(null=True, blank=True, validators=[
         MinValueValidator(1), MaxValueValidator(5)
     ])
-    tip = MoneyField(null=True)
+    tip = MoneyField(null=True, blank=True)
 
     @property
     def is_completed(self):

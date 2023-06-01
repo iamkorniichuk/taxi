@@ -1,15 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from .models import *
 
-
-@admin.register(User)
-class UserAdmin(admin.ModelAdmin):
-    list_display = ('id', 'phone', 'full_name', 'image', 'is_staff')
+@admin.register(get_user_model())
+class UserAdmin(BaseUserAdmin):
+    list_display = ('id', 'phone', 'full_name', 'image')
     fields = ('phone', 'password', 'first_name', 'last_name', 'image')
     search_fields = ('phone', 'first_name', 'last_name')
-    list_filter = (('is_staff', admin.BooleanFieldListFilter), )
     ordering = ('id', )
     fieldsets = ()
     add_fieldsets = (
@@ -17,6 +15,3 @@ class UserAdmin(admin.ModelAdmin):
             'fields': ('phone', 'password1', 'password2', 'first_name', 'last_name', 'image'),
         }),
     )
-
-    def save_model(self, request, obj, form, change):
-        get_user_model().objects.create_user(**form.cleaned_data)

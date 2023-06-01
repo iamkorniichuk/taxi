@@ -1,67 +1,42 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from django.core.validators import RegexValidator
 from django.db import models
-from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.core.validators import RegexValidator
 
 
 class UserManager(BaseUserManager):
     def create_user(self, phone, password=None, **kwargs):
         user = self.model(phone=phone, **kwargs)
         user.set_password(password)
-        user
         user.save()
         return user
 
     def create_superuser(self, phone, password=None, **kwargs):
         user = self.create_user(phone, password, **kwargs)
+        user.is_staff= True
         user.is_superuser = True
-        user.is_staff = True
         user.save()
         return user
 
 
-class User(AbstractBaseUser):
+class User(PermissionsMixin, AbstractBaseUser):
     id = models.AutoField(primary_key=True)
     phone = models.CharField(unique=True, null=False, max_length=10,
                              validators=[RegexValidator(r'^0\d{9}$')])
     password = models.CharField(max_length=128)
-    is_superuser = models.BooleanField(default=False)
-    is_staff = models.BooleanField(default=False)
     first_name = models.CharField(max_length=50, blank=True)
     last_name = models.CharField(max_length=50, blank=True)
     image = models.ImageField(default='default.png', null=False)
+
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
     objects = UserManager()
 
     USERNAME_FIELD = 'phone'
 
-    # TODO: To improve perfomance
-    def has_perm(self, perm: str) -> bool:
-        if self.is_superuser:
-            return True
-        
-        for group in self.groups:
-            try:
-                group.permissions.get(codename=perm)
-                return True
-            except ObjectDoesNotExist:
-                continue
-        return False
-    
-    def has_module_perms(self, app_label):
-        return self.is_superuser
-
-    def has_group(self, group) -> bool:
-        if self.is_superuser:
-            return True
-
-        return self.accounts.get(group=group) == None
-
     @property
-    def groups(self):
-        result = [account.group for account in self.accounts.all()]
-        result.sort(key=lambda group: group.pk)
-        return result
+    def rating(self):
+        return self.trips.filter(driver=self).aggregate(models.Avg('rating'))['rating__avg']
 
     @property
     def full_name(self):

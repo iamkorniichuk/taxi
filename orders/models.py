@@ -12,7 +12,7 @@ from .apps import APP_NAME
 
 class Order(UserRelatedModel):
     customer = models.ForeignKey(get_user_model(), on_delete=models.CASCADE,
-                                 related_name='orders')
+                                 related_name='orders', limit_choices_to={'groups__name': 'customer'})
     _stops = models.MultiPointField()
     price = MoneyField()
     note = models.TextField(max_length=128, blank=True)
