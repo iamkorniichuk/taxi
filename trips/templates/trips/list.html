@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load user_methods %}
+
+{% block content %}
+{% for trip in trips  %}
+    <div class="card m-3">
+        <div class="card-body" role="button" onclick="window.location='{{ trip.get_absolute_url }}'">
+            <h5 class="card-title">{{ trip.order.distance }} km for {{ trip.order.price }} UAH</h5>
+            <div>Stops:
+                {% comment %} // TODO: To end {% endcomment %}
+                <ul>
+                    {% for stop in trip.order.stops %}
+                        <li>{{ stop }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% if trip.order.note %}
+                <figure class="note note-success p-4">
+                    <blockquote class="blockquote">
+                        {{ order.note }}
+                    </blockquote>
+                </figure>
+            {% endif %}
+            <div>{{ trip.order.get_car_type_display }} type</div>
+            <div>{{ trip.order.get_car_class_display }} class</div>
+        </div>
+    </div>
+{% endfor %}
+{% endblock content %}

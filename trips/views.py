@@ -2,11 +2,17 @@ from django.utils import timezone
 from django.views.decorators.http import require_POST
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.views.generic import DetailView
+from django.views.generic import DetailView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Trip
 from .apps import APP_NAME
+
+
+class TripListView(LoginRequiredMixin, ListView):
+    model = Trip
+    template_name = APP_NAME + '/list.html'
+    context_object_name = 'trips'
 
 # TODO: Restrict view for non related users
 class TripDetailView(LoginRequiredMixin, DetailView):

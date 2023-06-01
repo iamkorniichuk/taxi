@@ -11,26 +11,25 @@ class Trip(UserRelatedModel):
     driver = models.ForeignKey(get_user_model(), models.CASCADE, related_name='trips',
                                limit_choices_to={'groups__name': 'driver'})
     start_datetime = models.DateTimeField(auto_now=True)
-    end_datetime = models.DateTimeField(null=True)
-    rating = models.PositiveSmallIntegerField(null=True, blank=True, validators=[
+    complete_datetime = models.DateTimeField(null=True)
+    rating = models.PositiveSmallIntegerField(null=True, validators=[
         MinValueValidator(1), MaxValueValidator(5)
     ])
-    tip = MoneyField(null=True, blank=True)
+    tip = MoneyField(null=True)
 
     @property
     def is_completed(self):
-        return self.end_datetime != None
+        return self.complete_datetime != None
 
     @property
     def wait_time(self):
         if self.is_completed:
             return self.start_datetime - self.order.datetime
-        return False
 
     @property
     def duration(self):
         if self.is_completed:
-            return self.end_datetime - self.start_datetime
+            return self.complete_datetime - self.start_datetime
         return False
 
     def __str__(self) -> str:
