@@ -5,8 +5,7 @@ DEFAULT_GROUPS = [
         'permissions': [
             'add_order',
             'add_report'
-        ],
-        'home_url': 'orders:create'
+        ]
     },
     {
         'pk': 2,
@@ -14,8 +13,7 @@ DEFAULT_GROUPS = [
         'permissions': [
             'view_order',
             'accept_order'
-        ],
-        'home_url': 'orders:list'
+        ]
     },
     {
         'pk': 3,
@@ -28,8 +26,7 @@ DEFAULT_GROUPS = [
             'add_car',
             'view_car',
             'change_car'
-        ],
-        'home_url': 'reports:list'
+        ]
     },
     {
         'pk': 4,

@@ -6,4 +6,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 class HomeRedirectView(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         user = self.request.user
-        return reverse(user.groups[-1].home_url)
+        if user.has_perm('add_order'):
+            url = 'orders:create'
+        else:
+            url = 'users:my_profile'
+        return reverse(url)
