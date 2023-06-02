@@ -36,16 +36,22 @@ class User(PermissionsMixin, AbstractBaseUser):
 
     @property
     def full_name(self):
-        return f'{self.first_name} {self.last_name}'
+        result = ' '.join([self.first_name, self.last_name])
+        if result.isspace():
+            result = f'User #{self.pk}'
+        return result
+
+    def __str__(self) -> str:
+        return self.phone if self.full_name.isspace() else self.full_name
 
     @property
     def drives(self):
         return self.trips.filter(driver=self)
-    
+
     @property
     def completed_drives(self):
         return self.drives.exclude(complete_datetime__isnull=True)
-    
+
     @property
     def rated_drives(self):
         return self.completed_drives.exclude(rating__isnull=True)
@@ -57,6 +63,3 @@ class User(PermissionsMixin, AbstractBaseUser):
     @property
     def recent_trips(self):
         return self.trips.order_by('-start_datetime')[0:3]
-
-    def __str__(self) -> str:
-        return self.phone if self.full_name.isspace() else self.full_name
