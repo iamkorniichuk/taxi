@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us{% endblock title %}
+
+{% block content %}
+<div class="container d-flex align-items-center justify-content-center px-4 py-5 mt-4">
+    <div class="col row row-cols-1 row-cols-md-2 align-items-md-center g-5 py-5">
+
+      <div class="col d-flex flex-column align-items-start gap-2">
+        <h3 class="fw-bold">{{ customers_count }} customers are already trust us!</h3>
+        <p class="text-muted">
+          We did everything to make your experience using our app more comfortable as we could. Check it out and leave your report if something goes wrong.
+        </p>
+        <a href="{% url 'users:signup' %}" class="btn btn-primary btn-lg">Sign Up Right Now</a>
+      </div>
+
+      <div class="row row-cols-1 row-cols-sm-2 g-4">
+
+        <div class="col d-flex flex-column gap-2">
+          <div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary fs-4 rounded-3">
+            <i class="bi bi-people-fill"></i>
+          </div>
+          <h4 class="fw-semibold mb-0">We have {{ drivers_count }} active drivers</h4>
+          <p class="text-muted">Our employees work as active as can so you will never wait too long for your car.</p>
+        </div>
+
+        <div class="col d-flex flex-column gap-2">
+            <div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary fs-4 rounded-3">
+              <i class="bi bi-car-front-fill"></i>
+            </div>
+            <h4 class="fw-semibold mb-0">{{ trips_count }} trips have been served</h4>
+            <p class="text-muted">Our customers already shared a lot of history with us and we look for more of it!</p>
+        </div>        
+
+        <div class="col d-flex flex-column gap-2">
+          <div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary fs-4 rounded-3">
+            <i class="bi bi-star-fill"></i>
+          </div>
+          <h4 class="fw-semibold mb-0">{{ avg_rating }} stars is an average rating</h4>
+          <p class="text-muted">Our high rating won't stop us from improving because there are low ratings yet.</p>
+        </div>
+
+        <div class="col d-flex flex-column gap-2">
+          <div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary fs-4 rounded-3">
+            <i class="bi bi-bar-chart-line-fill"></i>
+          </div>
+          <h4 class="fw-semibold mb-0">Average number of orders per day is {{ orders_per_day }}</h4>
+          <p class="text-muted">As someone said: "Trust is built with consistency". As we said: "Trust - our very first goal".</p>
+        </div>
+
+      </div>
+
+    </div>
+</div>
+{% endblock content %}

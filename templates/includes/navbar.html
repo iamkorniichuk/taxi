@@ -1,19 +1,35 @@
+{% load user_methods %}
+
 <header>
   <nav class="navbar navbar-expand navbar-light bg-light">
     <div class="container-fluid">
       <ul class="navbar-nav">
-        {% for account in user.accounts.all %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url account.group.home_url %}">{{ account.group|title }}</a>
-          </li>
-        {% endfor %}
+        <a class="navbar-brand" href="{% url 'about' %}">
+          <i class="bi bi-taxi-front-fill mx-2"></i>Taxi
+        </a>
+        {% comment %} // TODO: To end {% endcomment %}
+        {% if user.is_authenticated %}
+          <div class="vr vr-blurry"></div>
+          {% has_perm 'add_order' as can_add_order %}
+          {% if can_add_order %}
+            {% include 'includes/nav_link.html' with url='orders:create' title='Place an Order' %}
+          {% endif %}
+
+          {% has_perm 'view_order' as can_view_order %}
+          {% if can_view_order %}
+            {% include 'includes/nav_link.html' with url='orders:list' title='Orders' %}
+          {% endif %}
+
+          {% include 'includes/nav_link.html' with url='trips:list' title='Trips' %}
+          {% include 'includes/nav_link.html' with url='reports:list' title='Reports' %}
+        {% endif %}
       </ul>
       <ul class="navbar-nav">
         {% if user.is_authenticated %}
-          <li class="nav-item"><a class="nav-link" href="{% url 'users:my_profile' %}">Profile</a></li>
+          {% include 'includes/nav_link.html' with url='users:my_profile' title='Profile' %}
         {% else %}
-          <li class="nav-item"><a class="nav-link" href="{% url 'users:login' %}">Log In</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'users:signup' %}">Sign Up</a></li>
+          {% include 'includes/nav_link.html' with url='users:login' title='Log In' %}
+          {% include 'includes/nav_link.html' with url='users:signup' title='Sign Up' %}
         {% endif %}
       </ul>
     </div>
