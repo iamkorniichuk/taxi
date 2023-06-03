@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.gis',
     
+    'commons',
+
     'users',
     'orders',
     'cars',

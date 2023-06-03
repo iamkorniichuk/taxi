@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load utils %}
 
 {% block title %}About Us{% endblock title %}
 
@@ -7,7 +8,7 @@
     <div class="col row row-cols-1 row-cols-md-2 align-items-md-center g-5 py-5">
 
       <div class="col d-flex flex-column align-items-start gap-2">
-        <h3 class="fw-bold">{{ customers_count }} customers are already trust us!</h3>
+        <h3 class="fw-bold">{{ customers_count }} customer{{ customers_count|pluralize }} {{ customers_count|pluralize:'is,are' }} already trust us!</h3>
         <p class="text-muted">
           We did everything to make your experience using our app more comfortable as we could. Check it out and leave your report if something goes wrong.
         </p>
@@ -17,36 +18,24 @@
       <div class="row row-cols-1 row-cols-sm-2 g-4">
 
         <div class="col d-flex flex-column gap-2">
-          <div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary fs-4 rounded-3">
-            <i class="bi bi-people-fill"></i>
-          </div>
-          <h4 class="fw-semibold mb-0">We have {{ drivers_count }} active drivers</h4>
-          <p class="text-muted">Our employees work as active as can so you will never wait too long for your car.</p>
+          {% format 'We have {count} active driver{plural}' count=drivers_count plural=drivers_count|pluralize as title %}
+          {% include 'includes/feature.html' with title=title desc='Our employees work as active as can so you will never wait too long for your car.' icon='bi bi-people-fill' %}
         </div>
 
         <div class="col d-flex flex-column gap-2">
-            <div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary fs-4 rounded-3">
-              <i class="bi bi-car-front-fill"></i>
-            </div>
-            <h4 class="fw-semibold mb-0">{{ trips_count }} trips have been served</h4>
-            <p class="text-muted">Our customers already shared a lot of history with us and we look for more of it!</p>
-        </div>        
+          {% format '{count} trip{plural} have been served' count=trips_count plural=trips_count|pluralize as title %}
+          {% include 'includes/feature.html' with title=title desc='Our customers already shared a lot of history with us and we look for more of it!' icon='bi bi-car-front-fill' %}
+        </div>  
 
         <div class="col d-flex flex-column gap-2">
-          <div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary fs-4 rounded-3">
-            <i class="bi bi-star-fill"></i>
-          </div>
-          <h4 class="fw-semibold mb-0">{{ avg_rating }} stars is an average rating</h4>
-          <p class="text-muted">Our high rating won't stop us from improving because there are low ratings yet.</p>
-        </div>
+          {% format '{avg} star{plural} {be} an average rating' avg=avg_rating plural=avg_rating|pluralize be=avg_rating|pluralize:'is,are' as title %}
+          {% include 'includes/feature.html' with title=title desc='Our high rating won`t stop us from improving because there are low ratings yet.' icon='bi bi-star-fill' %}
+        </div> 
 
         <div class="col d-flex flex-column gap-2">
-          <div class="feature-icon-small d-inline-flex align-items-center justify-content-center text-bg-primary fs-4 rounded-3">
-            <i class="bi bi-bar-chart-line-fill"></i>
-          </div>
-          <h4 class="fw-semibold mb-0">Average number of orders per day is {{ orders_per_day }}</h4>
-          <p class="text-muted">As someone said: "Trust is built with consistency". As we said: "Trust - our very first goal".</p>
-        </div>
+          {% format 'Average number of orders per day is {avg}' avg=orders_per_day as title %}
+          {% include 'includes/feature.html' with title=title desc='As someone said: "Trust is built with consistency". As we said: "Trust - our very first goal".' icon='bi bi-bar-chart-line-fill' %}
+        </div> 
 
       </div>
 
