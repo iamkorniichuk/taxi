@@ -10,13 +10,13 @@
         {% comment %} // TODO: To end {% endcomment %}
         {% if user.is_authenticated %}
           <div class="vr vr-blurry"></div>
-          {% has_perm 'add_order' as can_add_order %}
+          {% has_perm 'orders.add_order' as can_add_order %}
           {% if can_add_order %}
             {% include 'includes/nav_link.html' with url='orders:create' title='Place an Order' %}
           {% endif %}
 
-          {% has_perm 'view_order' as can_view_order %}
-          {% if can_view_order %}
+          {% has_perm 'orders.view_order' as can_view_order %}
+          {% if can_view_order or can_add_order %}
             {% include 'includes/nav_link.html' with url='orders:list' title='Orders' %}
           {% endif %}
 

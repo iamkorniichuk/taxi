@@ -1,6 +1,7 @@
 from django.contrib.gis.db import models
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.db.models import ExpressionWrapper, Exists, OuterRef
 
 from commons.models import MoneyField, UserRelatedModel
 from commons.geo import geolocator
@@ -8,6 +9,19 @@ from commons.geo import geolocator
 from cars.models import TypeChoices, ClassChoices
 
 from .apps import APP_NAME
+
+
+class OrderManager(models.Manager):
+    def get_queryset(self):
+        from trips.models import Trip
+
+        return super().get_queryset().annotate(
+            is_open=ExpressionWrapper(
+                ~Exists(
+                    Trip.objects.filter(order=OuterRef('pk'))
+                ), output_field=models.BooleanField()
+            )
+        )
 
 
 class Order(UserRelatedModel):
@@ -22,6 +36,8 @@ class Order(UserRelatedModel):
     car_class = models.CharField(max_length=5, choices=ClassChoices.choices,
                                  default=ClassChoices.BASIC)
 
+    objects = OrderManager()
+
     class Meta:
         permissions = [
             ('accept_order', 'User can accept any open order')
@@ -29,10 +45,6 @@ class Order(UserRelatedModel):
 
     def get_absolute_url(self):
         return reverse(APP_NAME + ':detail', kwargs={'pk': self.pk})
-
-    @property
-    def is_open(self):
-        return not hasattr(self, 'trip')
 
     def set_stops(self, value):
         self._stops = value

@@ -42,7 +42,7 @@ class User(PermissionsMixin, AbstractBaseUser):
         return result
 
     def __str__(self) -> str:
-        return self.phone if self.full_name.isspace() else self.full_name
+        return self.full_name
 
     @property
     def drives(self):

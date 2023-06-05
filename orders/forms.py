@@ -4,6 +4,7 @@ from commons.forms import BootstrapForm
 
 from .models import Order
 
+
 class MapWidget(forms.OSMWidget):
     def __init__(self):
         super().__init__(attrs={
