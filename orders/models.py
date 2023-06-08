@@ -1,14 +1,20 @@
-from django.contrib.gis.db import models
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.db import models
 from django.db.models import ExpressionWrapper, Exists, OuterRef
 
 from commons.models import MoneyField, UserRelatedModel
-from commons.geo import geolocator
 
 from cars.models import TypeChoices, ClassChoices
 
 from .apps import APP_NAME
+
+
+# class Stop(models.Model):
+#     country = models.CharField(max_length=100, default='Ukraine', null=False)
+#     city = models.CharField(max_length=100, null=False)
+#     street = models.CharField(max_length=150, null=False)
+#     building = models.CharField(max_length=50, null=False)
 
 
 class OrderManager(models.Manager):
@@ -27,7 +33,8 @@ class OrderManager(models.Manager):
 class Order(UserRelatedModel):
     customer = models.ForeignKey(get_user_model(), on_delete=models.CASCADE,
                                  related_name='orders', limit_choices_to={'groups__name': 'customer'})
-    _stops = models.MultiPointField()
+    start = models.CharField(max_length=300, blank=False)
+    end = models.CharField(max_length=300, blank=False)
     price = MoneyField()
     note = models.TextField(max_length=128, blank=True)
     datetime = models.DateTimeField(auto_now=True)
@@ -45,28 +52,6 @@ class Order(UserRelatedModel):
 
     def get_absolute_url(self):
         return reverse(APP_NAME + ':detail', kwargs={'pk': self.pk})
-
-    def set_stops(self, value):
-        self._stops = value
-
-    def get_stops(self):
-        # TODO: Wrong stops name
-        # TODO: Slow loading
-        addresses = []
-        for stop in self._stops:
-            couroutine = geolocator.reverse(stop, language='en', timeout=None)
-            if couroutine:
-                addresses.append(couroutine.address)
-        return addresses
-
-    stops = property(get_stops, set_stops)
-
-    @property
-    def distance(self):
-        km = 0
-        for i in range(1, len(self._stops)):
-            km += self._stops[i - 1].distance(self._stops[i]) * 100
-        return round(km, 3)
 
     def __str__(self) -> str:
         return self.pk.__str__()

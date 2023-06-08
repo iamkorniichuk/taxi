@@ -16,7 +16,6 @@ class OrderFilterSet(BootstrapFilterSet):
     class Meta:
         model = Order
         fields = '__all__'
-        exclude = ('_stops', )
 
     ordering = OrderingFilter(
         fields=[

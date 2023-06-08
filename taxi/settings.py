@@ -12,19 +12,10 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from django.core.management.utils import get_random_secret_key
 from pathlib import Path
-import os
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-OSGEO_PATH = r'.\venv\Lib\site-packages\osgeo'
-os.environ['GDAL_DATA'] = OSGEO_PATH + r'\data\gdal'
-os.environ['PROJ_LIB'] = OSGEO_PATH + r'\data\proj'
-os.environ['PATH'] = OSGEO_PATH + os.environ['PATH']
-GDAL_LIBRARY_PATH = OSGEO_PATH + r'\gdal304.dll'
-
-SPATIALITE_LIBRARY_PATH = 'mod_spatialite'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -47,8 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.gis',
+
     'django_filters',
+    'geopandas',
     
     'commons',
 
@@ -98,7 +90,7 @@ WSGI_APPLICATION = 'taxi.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.spatialite',
+        'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }

@@ -1,8 +1,9 @@
-from django.db.models.fields import DateTimeField, TextField
+from django.db.models.fields import DateTimeField, TextField, CharField
+from django.forms.widgets import TextInput
 
 from django_filters import FilterSet
 from django_filters.widgets import RangeWidget
-from django_filters.filters import DateTimeFromToRangeFilter, RangeFilter
+from django_filters.filters import DateTimeFromToRangeFilter, RangeFilter, CharFilter
 
 from commons.models import MoneyField
 
@@ -12,6 +13,13 @@ from .widgets import *
 
 class BootstrapFilterSet(FilterSet):
     FILTER_DEFAULTS = {
+        CharField: {
+            'filter_class': CharFilter,
+            'extra': lambda f: {
+                'widget': TextInput,
+                'lookup_expr': 'contains'
+            },
+        },
         TextField: {
             'filter_class': EmptyStringFilter,
             'extra': lambda f: {
@@ -22,7 +30,7 @@ class BootstrapFilterSet(FilterSet):
         MoneyField: {
             'filter_class': RangeFilter,
             'extra': lambda f: {
-                'widget': RangeWidget(),
+                'widget': RangeWidget,
             },
         },
         DateTimeField: {
