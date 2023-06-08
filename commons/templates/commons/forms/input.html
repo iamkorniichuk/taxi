@@ -1,0 +1,7 @@
+{% load utils %}
+
+<div class="input-group">
+    <div class="input-group-text"><i class="{{ icon }}"></i></div>
+    {% format "class: form-control, placeholder: {label}" label=field.label as attr %}
+    {{ field|attrs:attr }}
+</div>

@@ -14,3 +14,18 @@ def delta(delta, format: str):
 @register.simple_tag()
 def format(format: str, **vars):
     return format.format(**vars)
+
+
+@register.filter()
+def attrs(value, arg):
+    attrs = value.field.widget.attrs
+
+    data = arg.split(', ')
+
+    for string in data:
+        kv = string.split(':')
+        attrs[kv[0]] = kv[1]
+
+    rendered = str(value)
+
+    return rendered
