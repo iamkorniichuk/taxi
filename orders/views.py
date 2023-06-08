@@ -65,9 +65,9 @@ def order_accept_view(request, *args, **kwargs):
 def order_cancel_view(request, *args, **kwargs):
     pk = request.POST.get('pk')
     order = Order.objects.get(pk=pk)
+    if order.is_open:
+        order.has_user_in_field(request.user, 'customer', is_safe=False)
+        order.delete()
 
-    order.has_user_in_field(request.user, 'customer', is_safe=False)
-    order.delete()
-
-    success_url = reverse(APP_NAME + ':create')
-    return redirect(success_url)
+        success_url = reverse(APP_NAME + ':create')
+        return redirect(success_url)
