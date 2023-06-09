@@ -1,34 +1,24 @@
 {% extends 'base.html' %}
+{% load user_methods %}
 
 {% block content %}
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">{{ order.distance }} km for {{ order.price }} UAH</h5>
-        <div>Stops:
-            <ul>
-                {% for stop in order.stops %}
-                    <li>{{ stop }}</li>
-                {% endfor %}
-            </ul>
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="mb-3">
+                {% include 'users/includes/profile.html' with profile=order.customer %}
+            </div>
+
+            {% if not order.is_open  %}
+                {% has_perm  'view_trip' as can_view_trip %}
+                {% if can_view_trip or order.customer == user %}
+                    <a class="btn btn-outline-primary w-100 mb-4" href="{{ order.trip.get_absolute_url }}">See trip</a>
+                {% endif %}
+            {% endif %}
+
         </div>
-        {% if order.note %}
-            <figure class="note note-success p-4">
-                <blockquote class="blockquote">
-                    {{ order.note }}
-                </blockquote>
-            </figure>
-        {% endif %}
-        <div>{{ order.get_car_type_display }} type</div>
-        <div>{{ order.get_car_class_display }} class</div>
-    </div>
-    <div class="card-footer">
-        {% comment %} // TODO: Add accept form for drivers {% endcomment %}
-        <form method="post" action="{% url 'orders:cancel' %}">
-            {% comment %} // TODO: Add restrictions for non order related users {% endcomment %}
-            {% csrf_token %}
-            <input type="hidden" name="pk" value="{{ order.pk }}" readonly="readonly">
-            <button class="btn btn-primary w-100" type="submit">Cancel</button>
-        </form>
-    </div>
-</div>
+
+        <div class="col-lg-8">
+          {% include 'orders/includes/order.html' with order=order %}
+        </div>
 {% endblock content %}

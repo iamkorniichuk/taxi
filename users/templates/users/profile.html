@@ -11,24 +11,8 @@
     <div class="row">
         <div class="col-lg-4">
 
-            <div class="card mb-4">
-                <div class="card-body text-center">
-                    <img class="rounded-circle img-fluid mb-3" style="width: 150px;"
-                    src="{{ profile.image.url }}" alt="{{ profile.first_name }}'s picture">
-                    <h5 class="d-flex justify-content-center align-items-center">
-                        <span class="px-3">{{ profile.full_name }}</span>
-                        {% if user == profile %}
-                            <a href="{% url 'users:update' %}">
-                                <i class="bi bi-pencil-fill"></i>
-                            </a>
-                        {% endif %}
-                    </h5>
-                    <p class="text-muted d-flex justify-content-evenly mb-0">
-                        {% for group in profile.groups.all %}
-                        <span>{{ group.name }}</span>
-                        {% endfor %}
-                    </p>
-                </div>
+            <div class="mb-4">
+                {% include 'users/includes/profile.html' with profile=profile %}
             </div>
 
             {% if profile.rating %}

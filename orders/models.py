@@ -10,13 +10,6 @@ from cars.models import TypeChoices, ClassChoices
 from .apps import APP_NAME
 
 
-# class Stop(models.Model):
-#     country = models.CharField(max_length=100, default='Ukraine', null=False)
-#     city = models.CharField(max_length=100, null=False)
-#     street = models.CharField(max_length=150, null=False)
-#     building = models.CharField(max_length=50, null=False)
-
-
 class OrderManager(models.Manager):
     def get_queryset(self):
         from trips.models import Trip

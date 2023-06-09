@@ -1,9 +1,12 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.urls import reverse
 
 from commons.models import MoneyField, UserRelatedModel
 from orders.models import Order
+
+from .apps import APP_NAME
 
 
 class Trip(UserRelatedModel):
@@ -31,6 +34,9 @@ class Trip(UserRelatedModel):
         if self.is_completed:
             return self.complete_datetime - self.start_datetime
         return False
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME + ':detail', kwargs={"pk": self.pk})
 
     def __str__(self) -> str:
         return self.order.__str__()
