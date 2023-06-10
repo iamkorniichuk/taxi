@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.core.validators import RegexValidator
+from django.urls import reverse
+
+from users.apps import APP_NAME
 
 
 class UserManager(BaseUserManager):
@@ -40,6 +43,9 @@ class User(PermissionsMixin, AbstractBaseUser):
         if result.isspace():
             result = f'User #{self.pk}'
         return result
+
+    def get_absolute_url(self):
+        return reverse(APP_NAME + ':profile', kwargs={"pk": self.pk})
 
     def __str__(self) -> str:
         return self.full_name

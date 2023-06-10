@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 
-{% load rating %}
 {% load utils %}
 {% load user_methods %}
 
@@ -19,10 +18,7 @@
                 <div class="card mb-4">
                     <div class="card-body text-center">
                         <div class="d-flex justify-content-evenly mb-3">
-                            {% stars profile.rating as rating %}
-                            {% for star in rating %}
-                                {{ star|safe }}
-                            {% endfor %}
+                            {% include 'includes/rating.html' with rating=profile.rating %}
                         </div>
                         <h6>Average rating in {{ profile.rated_drives.count }} drives</h6>
                     </div>
@@ -37,49 +33,21 @@
         <div class="col-lg-8">
             {% if profile.trips.count > 0 %}
                 <h5>Recent trips:</h5>
+                
                 {% for trip in profile.recent_trips %}
-                    <div class="card mb-2">
-                        <div class="card-body">
-                            <h5 class="card-title d-flex justify-content-between">
-                                <a class="plain-text" href="{{ trip.driver.get_absolute_url }}">
-                                    <i class="bi bi-car-front-fill"></i>
-                                    {{ trip.driver }}
-                                </a>
-                                <a class="plain-text" href="{{ trip.order.customer.get_absolute_url }}">
-                                    <i class="bi bi-person-fill"></i>
-                                    {{ trip.order.customer }}
-                                </a>
-                            </h5>
-                            {% if trip.is_completed %}
-                                <div class="d-flex justify-content-between">
-                                    <p>
-                                        <i class="bi bi-stopwatch"></i>
-                                        Completed in 
-                                        {{ trip.duration|delta:'{H}:{m}:{s}' }}
-                                    </p>
-                                    {% if trip.rating %}
-                                        <p>
-                                            {% stars trip.rating as rating %}
-                                            {% for star in rating %}
-                                                {{ star|safe }}
-                                            {% endfor %}
-                                        </p>
-                                    {% endif %}
-                                </div>
-                            {% else %}
-                                <p>
-                                    <i class="bi bi-x-circle"></i>
-                                    Haven't been completed
-                                </p>
-                            {% endif %}
-                        </div>
-                    </div>
+                    {% include 'trips/includes/trip.html' with trip=trip %}
                 {% endfor %}
+
                 {% if profile == user %}
-                <a class="btn btn-outline-primary w-100" href="{% url 'trips:list' %}">Show all</a>
+                <a class="btn btn-outline-primary w-100 mt-3" href="{% url 'trips:list' %}">Show all</a>
                 {% endif %}
+
             {% else %}
-                <h5>User has no trips</h5>
+                {% if profile.orders.count > 0 %}
+                    <h5>User made {{ profile.orders.count }} order {{ profile.orders.count|pluralize }}</h5>
+                {% else %}
+                    <h5>User has no trips</h5>
+                {% endif %}
             {% endif %}    
         </div>
 

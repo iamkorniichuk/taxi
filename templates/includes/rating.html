@@ -1,0 +1,6 @@
+{% load rating %}
+
+{% stars rating as rating %}
+{% for star in rating %}
+    {{ star|safe }}
+{% endfor %}

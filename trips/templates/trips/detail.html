@@ -1,32 +1,37 @@
 {% extends 'base.html' %}
+{% load user_methods %}
 
 {% block content %}
-<div class="card">
-    <div class="card-body">
-        {% with trip.order as order %}
-        <h5 class="card-title">{{ order.distance }} km for {{ order.price }} UAH</h5>
-            <div>Stops:
-                <ul>
-                    {% for stop in order.stops %}
-                        <li>{{ stop }}</li>
-                    {% endfor %}
-                </ul>
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="mb-3">
+                <h5>Driver:</h5>
+                {% include 'users/includes/profile.html' with profile=trip.driver %}
             </div>
-            {% if order.note %}
-                <figure class="note note-success p-4">
-                    <blockquote class="blockquote">
-                        {{ order.note }}
-                    </blockquote>
-                </figure>
+
+            <div class="mb-3">
+                <h5>Customer:</h5>
+                {% include 'users/includes/profile.html' with profile=trip.order.customer %}
+            </div>
+
+        </div>
+
+        <div class="col-lg-8">
+
+            <div class="mb-3">
+                <h5>Trip:</h5>
+                {% include 'trips/includes/trip.html' with trip=trip %}
+            </div>
+
+            {% has_perm 'orders.view_order' as can_view_order %}
+            {% if can_view_order or trip.driver == user or trip.order.driver == user %}
+                <div class="mb-3">
+                    <h5>Order:</h5>
+                    {% include 'orders/includes/order.html' with order=trip.order %}
+                </div>
             {% endif %}
-        {% endwith %}
-    </div>
-    <div class="card-footer">
-        <form action="{% url 'trips:end' %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="pk" value="{{ trip.pk }}" readonly="readonly">
-            <button class="btn btn-primary w-100" type="submit">End</button>
-        </form>
-    </div>
-</div>
+
+        </div>
+        
 {% endblock content %}
