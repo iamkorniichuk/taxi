@@ -10,7 +10,7 @@ from .apps import APP_NAME
 
 
 class Report(UserRelatedModel):
-    trip = models.ForeignKey(Trip, models.CASCADE, related_name='reports')
+    trip = models.OneToOneField(Trip, models.CASCADE, related_name='report')
     message = models.TextField(max_length=256)
     report_datetime = models.DateTimeField(auto_now=True, editable=False)
     answer = models.TextField(max_length=256, blank=True, default='')

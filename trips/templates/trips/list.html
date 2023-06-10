@@ -23,33 +23,28 @@
     <div class="collapse" id="filterForm">
         <form method="get">
 
-            <div class="row my-1">
-                <div class="col">
-                    {% has_perm  'trips.view_trip' as can_view_trip %}
-                    {% if can_view_trip %}
-                        <div class="my-1">{% include 'commons/forms/input.html' with field=filter.form.driver icon="bi bi-people-fill" %}</div>
-                    {% endif %}
+            {% has_perm  'trips.view_trip' as can_view_trip %}
+            {% if can_view_trip %}
+                <div class="my-1">
+                    {% include 'commons/forms/input.html' with field=filter.form.driver icon="bi bi-people-fill" %}
                 </div>
-                <div class="col">
-                    {% include 'commons/forms/fieldset.html' with field=filter.form.rating %}
-                </div>
-            </div>
+            {% endif %}
             
             <div class="row my-1">
                 <div class="col">
-                    {% include 'commons/forms/fieldset.html' with field=filter.form.tip %}
+                    {% include 'commons/forms/fieldset.html' with field=filter.form.rating %}
                 </div>
                 <div class="col">
-                    {% include 'commons/forms/fieldset.html' with field=filter.form.wait_time %}
+                    {% include 'commons/forms/fieldset.html' with field=filter.form.tip %}
                 </div>
             </div>
 
             <div class="row my-1">
                 <div class="col">
-                    {% include 'commons/forms/fieldset.html' with field=filter.form.duration %}
+                    {% include 'commons/forms/fieldset.html' with field=filter.form.is_completed has_options=True %}
                 </div>
                 <div class="col">
-                    {% include 'commons/forms/fieldset.html' with field=filter.form.is_completed has_options=True %}
+                    {% include 'commons/forms/fieldset.html' with field=filter.form.has_report has_options=True %}
                 </div>
             </div>
             

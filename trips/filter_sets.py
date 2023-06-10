@@ -27,10 +27,8 @@ class TripFilterSet(BootstrapFilterSet):
                           method='find_by_full_name', widget=TextInput)
     is_completed = BooleanFilter(field_name='is_completed', label='Is completed',
                             widget=SelectBooleanWidget)
-    wait_time = RangeFilter(field_name='wait_time', label='Wait time',
-                             widget=RangeWidget)
-    duration = RangeFilter(field_name='duration', label='Duration',
-                             widget=RangeWidget)
+    has_report = BooleanFilter(field_name='has_report', label='Has report',
+                            widget=SelectBooleanWidget)
 
     @property
     def qs(self):
