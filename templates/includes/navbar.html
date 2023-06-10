@@ -7,21 +7,20 @@
         <a class="navbar-brand" href="{% url 'about' %}">
           <i class="bi bi-taxi-front-fill mx-2"></i>Taxi
         </a>
-        {% comment %} // TODO: To end {% endcomment %}
+
         {% if user.is_authenticated %}
+
           <div class="vr vr-blurry"></div>
+
           {% has_perm 'orders.add_order' as can_add_order %}
           {% if can_add_order %}
             {% include 'includes/nav_link.html' with url='orders:create' title='Place an Order' %}
           {% endif %}
 
-          {% has_perm 'orders.view_order' as can_view_order %}
-          {% if can_view_order or can_add_order %}
-            {% include 'includes/nav_link.html' with url='orders:list' title='Orders' %}
-          {% endif %}
-
+          {% include 'includes/nav_link.html' with url='orders:list' title='Orders' %}
           {% include 'includes/nav_link.html' with url='trips:list' title='Trips' %}
           {% include 'includes/nav_link.html' with url='reports:list' title='Reports' %}
+          
         {% endif %}
       </ul>
       <ul class="navbar-nav">

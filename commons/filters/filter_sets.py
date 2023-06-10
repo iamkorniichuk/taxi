@@ -1,4 +1,4 @@
-from django.db.models.fields import DateTimeField, TextField, CharField
+from django.db.models.fields import DateTimeField, TextField, CharField, PositiveSmallIntegerField
 from django.forms.widgets import TextInput
 
 from django_filters import FilterSet
@@ -25,6 +25,12 @@ class BootstrapFilterSet(FilterSet):
             'extra': lambda f: {
                 'widget': SelectBooleanWidget,
                 'exclude': True
+            },
+        },
+        PositiveSmallIntegerField: {
+            'filter_class': RangeFilter,
+            'extra': lambda f: {
+                'widget': RangeWidget,
             },
         },
         MoneyField: {

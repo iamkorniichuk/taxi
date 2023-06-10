@@ -36,10 +36,8 @@ class OrderCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         instance = form.save(commit=False)
         instance.customer = self.request.user
         instance.save()
-        return HttpResponseRedirect(self.get_success_url())
-
-    def get_success_url(self):
-        return self.object.get_absolute_url()
+        
+        return HttpResponseRedirect(instance.get_absolute_url())
 
 
 class OrderListView(LoginRequiredMixin, FilterView):
@@ -49,7 +47,7 @@ class OrderListView(LoginRequiredMixin, FilterView):
 
 
 @require_POST
-@perm_required('accept_order')
+@perm_required(APP_NAME + '.accept_order')
 def order_accept_view(request, *args, **kwargs):
     pk = request.POST.get('pk')
     order = Order.objects.get(pk=pk)

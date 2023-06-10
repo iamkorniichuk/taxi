@@ -1,47 +1,43 @@
 from django.db.models import Q
 from django.forms import TextInput
-from django_filters.filters import CharFilter, MultipleChoiceFilter, OrderingFilter, BooleanFilter
-
-from django.forms.widgets import CheckboxSelectMultiple
+from django_filters.filters import CharFilter, RangeFilter, BooleanFilter, OrderingFilter
+from django_filters.widgets import RangeWidget
 
 from commons.filters.filter_sets import BootstrapFilterSet
 from commons.filters.widgets import SelectBooleanWidget
-from cars.models import TypeChoices, ClassChoices
 
-from .models import Order
+from .models import Trip
 
 
-class OrderFilterSet(BootstrapFilterSet):
+class TripFilterSet(BootstrapFilterSet):
     class Meta:
-        model = Order
+        model = Trip
         fields = '__all__'
+        exclude = ('order', 'start_datetime', 'complete_datetime')
 
     ordering = OrderingFilter(
         fields=[
-            ('datetime', 'datetime'),
-            ('price', 'price'),
+            ('start_datetime', 'start_datetime')
         ],
         empty_label=None,
         null_label=None
     )
 
-    customer = CharFilter(field_name='customer',
+    driver = CharFilter(field_name='driver',
                           method='find_by_full_name', widget=TextInput)
-    is_open = BooleanFilter(field_name='is_open', label='Is open',
+    is_completed = BooleanFilter(field_name='is_completed', label='Is completed',
                             widget=SelectBooleanWidget)
-    car_type = MultipleChoiceFilter(choices=TypeChoices.choices,
-                                    widget=CheckboxSelectMultiple)
-    car_class = MultipleChoiceFilter(choices=ClassChoices.choices,
-                                     widget=CheckboxSelectMultiple)
+    wait_time = RangeFilter(field_name='wait_time', label='Wait time',
+                             widget=RangeWidget)
+    duration = RangeFilter(field_name='duration', label='Duration',
+                             widget=RangeWidget)
 
     @property
     def qs(self):
         queryset = super().qs
         user = self.request.user
-        if not user.has_perm('orders.view_order'):
-            queryset = queryset.filter(customer=user)
         if not user.has_perm('trips.view_trip'):
-            queryset = queryset.filter(is_open=True)
+            queryset = queryset.filter(Q(driver=user) | Q(order__customer=user))
         return queryset
 
     def find_by_full_name(self, queryset, name, value):

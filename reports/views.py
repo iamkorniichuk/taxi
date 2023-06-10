@@ -19,7 +19,7 @@ class ReportListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     template_name = APP_NAME + '/list.html'
     context_object_name = 'reports'
 
-    required_perm = 'view_report'
+    required_perm = APP_NAME + '.view_report'
 
 
 # TODO: Restrict view for non related users
@@ -33,7 +33,7 @@ class ReportDetailView(LoginRequiredMixin, UpdateView):
         data['report'] = self.get_object()
         return data
 
-    @method_decorator(perm_required('answer_report'))
+    @method_decorator(perm_required(APP_NAME + '.answer_report'))
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
 
@@ -51,7 +51,7 @@ class ReportDetailView(LoginRequiredMixin, UpdateView):
 
 
 @require_POST
-@perm_required('answer_report')
+@perm_required(APP_NAME + 'answer_report')
 def report_answer_view(request, *args, **kwargs):
     pk = request.POST.get('pk')
     report = Report.objects.get(pk=pk)

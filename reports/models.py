@@ -20,7 +20,7 @@ class Report(UserRelatedModel):
 
     class Meta:
         permissions = [
-            ('answer_report', 'Can answer to any report')
+            ('answer_report', 'Can answer to any reports of others')
         ]
 
     def get_absolute_url(self):

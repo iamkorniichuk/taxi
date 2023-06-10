@@ -4,6 +4,11 @@ from django.apps import AppConfig
 from .settings import DEFAULT_GROUPS
 
 
+def create_default_groups(sender, **kwargs):
+    for group in DEFAULT_GROUPS:
+        create_group(**group)
+
+
 def create_group(name, permissions, **kwargs):
     from django.contrib.auth.models import Group
     obj, created = Group.objects.update_or_create(
@@ -15,14 +20,9 @@ def create_group(name, permissions, **kwargs):
         obj.permissions.add(get_perm_pk(permission))
 
 
-def get_perm_pk(name) -> int:
+def get_perm_pk(codename) -> int:
     from django.contrib.auth.models import Permission
-    return Permission.objects.get(codename=name).pk
-
-
-def create_default_groups(sender, **kwargs):
-    for group in DEFAULT_GROUPS:
-        create_group(**group)
+    return Permission.objects.get(codename=codename).pk
 
 
 class GroupsConfig(AppConfig):

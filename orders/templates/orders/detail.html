@@ -10,7 +10,7 @@
             </div>
 
             {% if not order.is_open  %}
-                {% has_perm  'view_trip' as can_view_trip %}
+                {% has_perm  'trips.view_trip' as can_view_trip %}
                 {% if can_view_trip or order.customer == user %}
                     <a class="btn btn-outline-primary w-100 mb-4" href="{{ order.trip.get_absolute_url }}">See trip</a>
                 {% endif %}

@@ -40,7 +40,7 @@ class Order(UserRelatedModel):
 
     class Meta:
         permissions = [
-            ('accept_order', 'User can accept any open order')
+            ('accept_order', 'Can accept any open orders of others')
         ]
 
     def get_absolute_url(self):

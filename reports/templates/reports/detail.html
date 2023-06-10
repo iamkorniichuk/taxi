@@ -20,7 +20,7 @@
         {% endif %}
     </div>
     <div class="card-footer">
-        {% has_perm  'answer_report' as can_answer_report %}
+        {% has_perm  'reports.answer_report' as can_answer_report %}
         {% if can_answer_report and not report.is_completed %}
             <form method="post">
                 {% csrf_token %}
