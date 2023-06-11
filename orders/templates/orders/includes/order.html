@@ -8,13 +8,9 @@
             <div><i class="bi bi-cash"></i> {{ order.price }} UAH</div>
             <div>
                 {% if order.is_open %}
-                <i class="bi bi-dash-circle"></i> Still open
+                    <i class="bi bi-dash-circle"></i> Still open
                 {% else %}
-                    {% if order.trip.is_completed %}
-                    <i class="bi bi-check2-circle"></i> Completed
-                    {% else %}
-                    <i class="bi bi-speedometer2"></i> In proccess
-                    {% endif %}
+                    <i class="bi bi-check2-circle"></i> Taken
                 {% endif %}
             </div>
         </h5>
