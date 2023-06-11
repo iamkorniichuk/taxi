@@ -5,36 +5,34 @@ from django_filters.filters import CharFilter, BooleanFilter, OrderingFilter
 from commons.filters.filter_sets import BootstrapFilterSet
 from commons.filters.widgets import SelectBooleanWidget
 
-from .models import Trip
+from .models import Report
 
 
-class TripFilterSet(BootstrapFilterSet):
+class ReportFilterSet(BootstrapFilterSet):
     class Meta:
-        model = Trip
+        model = Report
         fields = '__all__'
-        exclude = ('order', 'start_datetime', 'complete_datetime')
+        exclude = ('trip', 'report_datetime', 'complete_datetime', 'answer', 'message')
 
     ordering = OrderingFilter(
         fields=[
-            ('start_datetime', 'start_datetime')
+            ('report_datetime', 'report_datetime')
         ],
         empty_label=None,
         null_label=None
     )
 
-    driver = CharFilter(field_name='driver',
+    manager = CharFilter(field_name='manager',
                           method='find_by_full_name', widget=TextInput)
     is_completed = BooleanFilter(field_name='is_completed', label='Is completed',
-                            widget=SelectBooleanWidget)
-    has_report = BooleanFilter(field_name='has_report', label='Has report',
                             widget=SelectBooleanWidget)
 
     @property
     def qs(self):
         queryset = super().qs
         user = self.request.user
-        if not user.has_perm('trips.view_trip'):
-            queryset = queryset.filter(Q(driver=user) | Q(order__customer=user))
+        if not user.has_perm('reports.view_report'):
+            queryset = queryset.filter(Q(manager=user) | Q(trip__order__customer=user))
         return queryset
 
     def find_by_full_name(self, queryset, name, value):

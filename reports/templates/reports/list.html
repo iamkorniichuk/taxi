@@ -2,13 +2,64 @@
 {% load user_methods %}
 
 {% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-end">
+        {% comment %} // TODO: To get count from context data {% endcomment %}
+        {% with object_list.count as reports_count %}
+            <h3 class="text-muted">
+                {% if reports_count > 0 %}
+                    {{ reports_count }} report{{ reports_count|pluralize }} found
+                {% else %}
+                    No reports are found
+                {% endif %}
+            </h3>
+        {% endwith %}
+
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#filterForm" aria-expanded="false" aria-controls="filterForm">
+            Filter
+        </button>
+    </div>
+    
+    <div class="collapse" id="filterForm">
+        <form method="get">
+
+            {% has_perm  'reports.view_report' as can_view_report %}
+            {% if can_view_report %}
+                <div class="my-1">
+                    {% include 'commons/forms/input.html' with field=filter.form.manager icon="bi bi-people-fill" %}
+                </div>
+            {% endif %}
+
+            <div class="row my-1">
+                <div class="col">
+                    {% include 'commons/forms/fieldset.html' with field=filter.form.is_completed has_options=True %}
+                </div>
+            </div>
+            
+            <hr class="hr">
+
+            <div class=" my-1">
+                {% include 'commons/forms/input.html' with field=filter.form.ordering icon="bi bi-arrow-down-up" %}
+            </div>
+
+            <div class="row my-3">
+                <div class="col"></div>
+                <div class="col row">
+                    <div class="col"><a class="btn btn-outline-secondary w-100" href="{% url 'orders:list' %}">Reset</a></div>
+                    <div class="col"><button class="btn btn-primary w-100" type="submit">Apply</button></div>
+                </div>
+            </div>
+
+        </form>
+    </div>
 
     <div class="row row-cols-2">
-        {% for report in reports  %}
+        {% for report in filter.qs %}
             <div class="col mt-3">
                 {% include 'reports/includes/report.html' with report=report %}
             </div>
         {% endfor %}
     </div>
 
+</div>
 {% endblock content %}
