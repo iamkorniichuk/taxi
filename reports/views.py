@@ -1,5 +1,4 @@
 from django.utils import timezone
-from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_POST
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView
@@ -31,8 +30,10 @@ class ReportDetailView(LoginRequiredMixin, DetailView):
 @perm_required(APP_NAME + '.answer_report')
 def report_answer_view(request, *args, **kwargs):
     pk = request.POST.get('pk')
+    answer = request.POST.get('answer')
     report = Report.objects.get(pk=pk)
     if not report.is_completed:
+        report.answer = answer
         report.manager = request.user
         report.complete_datetime = timezone.now()
         report.save()
