@@ -20,7 +20,7 @@ class TripManager(models.Manager):
                 output_field=models.BooleanField()
             ),
             has_report=ExpressionWrapper(
-                ~Exists(
+                Exists(
                     Report.objects.filter(trip=OuterRef('pk'))
                 ), output_field=models.BooleanField()
             ),
