@@ -41,6 +41,21 @@ def trip_end_view(request, *args, **kwargs):
 
 
 @require_POST
+def trip_rating_view(request, *args, **kwargs):
+    pk = request.POST.get('pk')
+    rating = request.POST.get('rating')
+    trip = Trip.objects.get(pk=pk)
+    user = request.user
+    if trip.order.customer != user:
+        raise PermissionDenied
+
+    trip.rating = rating
+    trip.save()
+
+    return redirect(request.META['HTTP_REFERER'])
+
+
+@require_POST
 def trip_tip_view(request, *args, **kwargs):
     pk = request.POST.get('pk')
     tip = request.POST.get('tip')
