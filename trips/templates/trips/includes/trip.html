@@ -14,26 +14,36 @@
         </h5>
 
         <div class="d-flex justify-content-between">
-            <p class="text-muted">
-                <i class="bi bi-stopwatch"></i> Duration: {{ trip.duration|delta:"{H}:{m}:{s}" }}
-            </p>
+            {% if trip.duration %}
+                <p class="text-muted">
+                    <i class="bi bi-stopwatch"></i> Duration: {{ trip.duration|delta:"{H}:{m}:{s}" }}
+                </p>
+            {% else %}
+                <p class="text-muted">
+                    <i class="bi bi-speedometer2"></i> In proccess
+                </p>
+            {% endif %}
             <p class="text-muted">
                 <i class="bi bi-clock-history"></i> Wait time: {{ trip.wait_time|delta:"{H}:{m}:{s}" }}
             </p>
         </div>
 
         <div class="d-flex justify-content-between">
-            {% if trip.rating %}
-                <p>
+            <p>
+                {% if trip.rating %}
                     {% include 'includes/rating.html' with rating=trip.rating %}
-                </p>
-            {% endif %}
-            {% if trip.tip %}
-                <p>
-                    <i class="bi bi-cash-coin"></i>
+                {% else %}
+                    <i class="bi bi-star"></i> Haven't been rated
+                {% endif %}
+            </p>
+            <p>
+                <i class="bi bi-cash-coin"></i>
+                {% if trip.tip %}
                     {{ trip.tip }} UAH
-                </p>
-            {% endif %}
+                {% else %}
+                    Haven't been tipped
+                {% endif %}
+            </p>
         </div>
 
         {% if trip.report %}
@@ -51,5 +61,6 @@
                 </form>
             {% endif %}
         {% endif %}
+
     </div>
 </div>

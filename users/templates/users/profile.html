@@ -35,7 +35,9 @@
                 <h5>Recent trips:</h5>
                 
                 {% for trip in profile.recent_trips %}
-                    {% include 'trips/includes/trip.html' with trip=trip %}
+                    <div class="mb-2">
+                        {% include 'trips/includes/trip.html' with trip=trip %}
+                    </div>
                 {% endfor %}
 
                 {% if profile == user %}
