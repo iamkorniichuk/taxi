@@ -12,7 +12,7 @@ from .apps import APP_NAME
 class Report(UserRelatedModel):
     trip = models.OneToOneField(Trip, models.CASCADE, related_name='report')
     message = models.TextField(max_length=256)
-    report_datetime = models.DateTimeField(auto_now=True, editable=False)
+    report_datetime = models.DateTimeField(auto_now_add=True, editable=False)
     answer = models.TextField(max_length=256, blank=True, default='')
     complete_datetime = models.DateTimeField(null=True)
     manager = models.ForeignKey(get_user_model(), models.CASCADE, null=True, blank=True,

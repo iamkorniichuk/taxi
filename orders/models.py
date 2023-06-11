@@ -30,7 +30,7 @@ class Order(UserRelatedModel):
     end = models.CharField(max_length=300, blank=False)
     price = MoneyField()
     note = models.TextField(max_length=128, blank=True)
-    datetime = models.DateTimeField(auto_now=True)
+    datetime = models.DateTimeField(auto_now_add=True)
     car_type = models.CharField(max_length=5, choices=TypeChoices.choices,
                                 default=TypeChoices.BASIC)
     car_class = models.CharField(max_length=5, choices=ClassChoices.choices,

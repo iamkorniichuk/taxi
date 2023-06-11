@@ -50,6 +50,3 @@ class Trip(UserRelatedModel):
 
     def get_absolute_url(self):
         return reverse(APP_NAME + ':detail', kwargs={"pk": self.pk})
-
-    def __str__(self) -> str:
-        return self.order.__str__()
