@@ -46,7 +46,7 @@
 
             {% else %}
                 {% if profile.orders.count > 0 %}
-                    <h5>User made {{ profile.orders.count }} order {{ profile.orders.count|pluralize }}</h5>
+                    <h5>User made {{ profile.orders.count }} order{{ profile.orders.count|pluralize }}</h5>
                 {% else %}
                     <h5>User has no trips</h5>
                 {% endif %}
