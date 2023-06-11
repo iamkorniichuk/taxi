@@ -1,8 +1,7 @@
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_POST
-from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.shortcuts import redirect
 from django.views.generic import ListView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -44,10 +43,7 @@ class ReportDetailView(LoginRequiredMixin, UpdateView):
             instance.manager = user
             instance.complete_datetime = timezone.now()
             instance.save()
-        return HttpResponseRedirect(self.get_success_url())
-    
-    def get_success_url(self):
-        return self.object.get_absolute_url()
+        return redirect(self.request.META['HTTP_REFERER'])
 
 
 @require_POST
@@ -58,6 +54,4 @@ def report_answer_view(request, *args, **kwargs):
     report.manager = request.user
     report.save()
 
-    # TODO: Provide valid url
-    success_url = reverse(APP_NAME + ':detail', args=[pk])
-    return HttpResponseRedirect(success_url)
+    return redirect(request.META['HTTP_REFERER'])

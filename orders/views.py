@@ -1,4 +1,3 @@
-from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.generic import CreateView, DetailView
@@ -37,7 +36,7 @@ class OrderCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         instance.customer = self.request.user
         instance.save()
         
-        return HttpResponseRedirect(instance.get_absolute_url())
+        return redirect(instance.get_absolute_url())
 
 
 class OrderListView(LoginRequiredMixin, FilterView):
@@ -53,10 +52,9 @@ def order_accept_view(request, *args, **kwargs):
     order = Order.objects.get(pk=pk)
     if order.is_open:
         driver = request.user
-        Trip.objects.create(order=order, driver=driver)
+        trip = Trip.objects.create(order=order, driver=driver)
 
-        success_url = reverse('trips:detail', args=[pk])
-        return HttpResponseRedirect(success_url)
+        return redirect(trip.get_absolute_url())
 
 
 @require_POST
