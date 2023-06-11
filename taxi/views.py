@@ -45,11 +45,11 @@ class AboutTemplateView(TemplateView):
             complete_datetime__isnull=True
         ).all().count()
 
-        data['avg_rating'] = Trip.objects.exclude(
+        data['avg_rating'] = round(Trip.objects.exclude(
             rating__isnull=True
         ).aggregate(
             avg=Avg('rating')
-        )['avg']
+        )['avg'], 2)
 
         current_month = timezone.now().month
         data['orders_per_day'] = int(Order.objects.filter(
