@@ -2,23 +2,13 @@
 {% load user_methods %}
 
 {% block content %}
-{% for report in reports  %}
-<div class="card m-3">
-    <div class="card-body" role="button" onclick="window.location='{{ report.get_absolute_url }}'">
-        <h5 class="card-title">Report from {{ report.report_datetime }}</h5>
-        <div>Driver: {{ report.trip.driver }} </div>
-        <figure class="note note-success p-4">
-            <blockquote class="blockquote">
-                {{ report.message }}
-            </blockquote>
-        </figure>
-        {% if report.answer %}
-            <figure class="note note-success p-4">
-                <blockquote class="blockquote">
-                    {{ report.answer }}
-                </blockquote>
-            </figure>
-        {% endif %}
+
+    <div class="row row-cols-2">
+        {% for report in reports  %}
+            <div class="col mt-3">
+                {% include 'reports/includes/report.html' with report=report %}
+            </div>
+        {% endfor %}
     </div>
-{% endfor %}
+
 {% endblock content %}

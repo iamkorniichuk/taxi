@@ -1,0 +1,42 @@
+{% load utils %}
+
+
+<div class="card h-100">
+    <div class="card-body" role="button" onclick="window.location='{{ report.get_absolute_url }}'">
+
+        <h5 class="card-title mb-4">
+            {% if report.is_completed %}
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <i class="bi bi-check2-circle"></i>
+                        Resolved in {{ report.completition_time|delta:"{H}:{m}:{s}" }}
+                    </div>
+                    <div>
+                        <i class="bi bi-person-fill"></i>
+                        {{ report.manager }}
+                    </div>
+                </div>
+            {% else %}
+                <i class="bi bi-x-circle"></i>
+                 Still open
+            {% endif %}
+        </h5>
+
+        <div class="text-start">
+            <div class="rounded bg-light border-start border-3 border-danger p-3 me-5">
+                {{ report.message }}
+            </div>
+            <p class="text-muted">{{ report.report_datetime|date:"H:i:s d.m.Y" }}</p>
+        </div>
+
+        {% if report.answer %}
+            <div class="text-end">
+                <div class="rounded bg-light border-start border-3 border-success p-3 ms-5">
+                    {{ report.answer }}
+                </div>
+                <p class="text-muted">{{ report.complete_datetime|date:"H:i:s d.m.Y" }}</p>
+            </div>
+        {% endif %}
+
+    </div>
+</div>

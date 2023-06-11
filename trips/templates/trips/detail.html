@@ -69,9 +69,16 @@
                             </div>
                         </div>
                     </form>
-                {% else %}
-                    {% include 'reports/includes/report.html' with report=trip.report %}
                 {% endif %}
+
+            {% endif %}
+
+            {% has_perm 'reports.view_report' as can_view_report %}
+            {% if can_view_report or trip.driver == user or trip.order.driver == user %}
+                <div class="my-3">
+                    <h5>Report:</h5>
+                    {% include 'reports/includes/report.html' with report=trip.report %}
+                </div>
             {% endif %}
 
             {% has_perm 'orders.view_order' as can_view_order %}

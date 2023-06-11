@@ -1,12 +1,27 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.db.models import Q, F, ExpressionWrapper
 
 from trips.models import Trip
 
 from commons.models import UserRelatedModel
 
 from .apps import APP_NAME
+
+
+class ReportManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().annotate(
+            is_completed=ExpressionWrapper(
+                Q(complete_datetime__isnull=False),
+                output_field=models.BooleanField()
+            ),
+            completition_time=ExpressionWrapper(
+                (F('complete_datetime') - F('report_datetime')),
+                output_field=models.DurationField()
+            )
+        )
 
 
 class Report(UserRelatedModel):
@@ -18,6 +33,8 @@ class Report(UserRelatedModel):
     manager = models.ForeignKey(get_user_model(), models.CASCADE, null=True, blank=True,
                                 related_name='reports', limit_choices_to={'groups__name': 'manager'})
 
+    objects = ReportManager()
+
     class Meta:
         permissions = [
             ('answer_report', 'Can answer to any reports of others')
@@ -25,13 +42,3 @@ class Report(UserRelatedModel):
 
     def get_absolute_url(self):
         return reverse(APP_NAME + ':detail', kwargs={'pk': self.pk})
-
-    @property
-    def is_completed(self):
-        return self.complete_datetime != None
-
-    @property
-    def completition_time(self):
-        if self.is_completed:
-            return self.complete_datetime - self.report_datetime
-        return False
