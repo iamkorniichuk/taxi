@@ -8,7 +8,7 @@
         {% with object_list.count as trips_count %}
             <h3 class="text-muted">
                 {% if trips_count > 0 %}
-                    {{ trips_count }} trips{{ trips_count|pluralize }} found
+                    {{ trips_count }} trip{{ trips_count|pluralize }} found
                 {% else %}
                     No trips are found
                 {% endif %}

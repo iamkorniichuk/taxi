@@ -19,14 +19,40 @@
 
         <div class="col-lg-8">
 
-            <div class="mb-3">
+            <div>
                 <h5>Trip:</h5>
                 {% include 'trips/includes/trip.html' with trip=trip %}
             </div>
 
+            {% if trip.order.customer == user %}
+                {% if not trip.tip %}
+                    <form class="mt-3" action="{% url 'trips:tip' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="pk" value="{{ trip.pk }}" readonly="readonly">
+                        <div class="row">
+                            <div class="col">
+                                <input class="form-control w-100" type="number" name="tip" placeholder="UAH">
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-primary w-100" type="submit">Tip</button>
+                            </div>
+                        </div>
+                    </form>
+                {% endif %}
+
+                {% if not trip.has_report %}
+                    <form action="{% url 'trips:report' %}" method="post">
+                        {% comment %} // TODO: Add report form {% endcomment %}
+
+                    </form>
+                {% else %}
+                    {% include 'reports/includes/report.html' with report=trip.report %}
+                {% endif %}
+            {% endif %}
+
             {% has_perm 'orders.view_order' as can_view_order %}
             {% if can_view_order or trip.driver == user or trip.order.driver == user %}
-                <div class="mb-3">
+                <div class="my-3">
                     <h5>Order:</h5>
                     {% include 'orders/includes/order.html' with order=trip.order %}
                 </div>
