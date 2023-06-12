@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'django_filters',
-    'geopandas',
     
     'commons',
 
@@ -50,6 +49,7 @@ INSTALLED_APPS = [
     'trips',
     'reports',
     'groups',
+    'stats',
 ]
 
 MIDDLEWARE = [
