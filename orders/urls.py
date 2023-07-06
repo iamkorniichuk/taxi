@@ -1,8 +1,10 @@
 from django.urls import path
+
+from .apps import OrdersConfig
 from .views import *
 
 
-app_name = APP_NAME
+app_name = OrdersConfig.name
 
 urlpatterns = [
     path('', OrderListView.as_view(), name='list'),

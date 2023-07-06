@@ -9,6 +9,3 @@ class UsersConfig(AppConfig):
         from .handlers import post_user_save
         
         return super().ready()
-
-
-APP_NAME = UsersConfig.name

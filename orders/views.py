@@ -11,7 +11,6 @@ from commons.decorators import perm_required
 from commons.mixins import PermissionRequiredMixin
 
 from .models import Order
-from .apps import APP_NAME
 from .forms import *
 from .filter_sets import OrderFilterSet
 
@@ -20,35 +19,35 @@ from .filter_sets import OrderFilterSet
 
 class OrderDetailView(LoginRequiredMixin, DetailView):
     model = Order
-    template_name = APP_NAME + '/detail.html'
-    context_object_name = 'order'
+    template_name = "orders/detail.html"
+    context_object_name = "order"
 
 
 class OrderCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Order
     form_class = CreateOrderForm
-    template_name = APP_NAME + '/create.html'
+    template_name = "orders/create.html"
 
-    required_perm = APP_NAME + '.add_order'
+    required_perm = "orders.add_order"
 
     def form_valid(self, form):
         instance = form.save(commit=False)
         instance.customer = self.request.user
         instance.save()
-        
+
         return redirect(instance.get_absolute_url())
 
 
 class OrderListView(LoginRequiredMixin, FilterView):
     model = Order
-    template_name = APP_NAME + '/list.html'
+    template_name = "orders/list.html"
     filterset_class = OrderFilterSet
 
 
 @require_POST
-@perm_required(APP_NAME + '.accept_order')
+@perm_required("orders.accept_order")
 def order_accept_view(request, *args, **kwargs):
-    pk = request.POST.get('pk')
+    pk = request.POST.get("pk")
     order = Order.objects.get(pk=pk)
     if order.is_open:
         driver = request.user
@@ -59,11 +58,11 @@ def order_accept_view(request, *args, **kwargs):
 
 @require_POST
 def order_cancel_view(request, *args, **kwargs):
-    pk = request.POST.get('pk')
+    pk = request.POST.get("pk")
     order = Order.objects.get(pk=pk)
     if order.is_open:
-        order.has_user_in_field(request.user, 'customer', is_safe=False)
+        order.has_user_in_field(request.user, "customer", is_safe=False)
         order.delete()
 
-        success_url = reverse(APP_NAME + ':create')
+        success_url = reverse("orders:create")
         return redirect(success_url)

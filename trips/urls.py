@@ -1,8 +1,10 @@
 from django.urls import path
+
+from .apps import TripsConfig
 from .views import *
 
 
-app_name = APP_NAME
+app_name = TripsConfig.name
 
 
 urlpatterns = [

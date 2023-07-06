@@ -1,8 +1,10 @@
 from django.urls import path
+
+from .apps import ReportsConfig
 from .views import *
 
 
-app_name = APP_NAME
+app_name = ReportsConfig.name
 
 urlpatterns = [
     path('', ReportListView.as_view(), name='list'),
