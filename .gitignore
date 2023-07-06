@@ -1,13 +1,14 @@
+# Project
+static_root/
+db.sqlite3
+media/
+images/
+
 # Django #
 *.log
 *.pot
 *.pyc
 __pycache__
-static_root/
-migrations/
-db.sqlite3
-media/
-images/
 
 # Backup files # 
 *.bak 
