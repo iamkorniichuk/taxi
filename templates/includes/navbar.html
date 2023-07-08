@@ -1,15 +1,17 @@
 {% load user_methods %}
 
-<header>
-  <nav class="navbar navbar-expand navbar-light bg-light">
+<header class="sticky-top">
+  <nav class="navbar navbar-expand bg-light">
+
     <div class="container-fluid">
+      
       <ul class="navbar-nav">
+
         <a class="navbar-brand" href="{% url 'about' %}">
           <i class="bi bi-taxi-front-fill mx-2"></i>Taxi
         </a>
 
         {% if user.is_authenticated %}
-
           <div class="vr vr-blurry"></div>
 
           {% has_perm 'orders.add_order' as can_add_order %}
@@ -23,6 +25,7 @@
           
         {% endif %}
       </ul>
+
       <ul class="navbar-nav">
         {% if user.is_authenticated %}
           {% include 'includes/nav_link.html' with url='users:my_profile' title='Profile' %}
@@ -31,6 +34,8 @@
           {% include 'includes/nav_link.html' with url='users:signup' title='Sign Up' %}
         {% endif %}
       </ul>
+
     </div>
+    
   </nav>
 </header>

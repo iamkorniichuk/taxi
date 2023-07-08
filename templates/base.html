@@ -16,7 +16,9 @@
 </head>
 <body>
     {% include 'includes/navbar.html' %}
-    {% block content %}{% endblock content %}
+    <div class="container-fluid mx-0">
+        {% block content %}{% endblock content %}
+    </div>
     <script src="{% static 'script.js' %}"></script>
 </body>
 </html>
