@@ -4,6 +4,7 @@ from math import floor
 
 register = template.Library()
 
+
 # TODO: To refactor / use include tag
 @register.simple_tag()
 def stars(rating: float):

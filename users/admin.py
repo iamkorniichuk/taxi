@@ -5,13 +5,23 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 @admin.register(get_user_model())
 class UserAdmin(BaseUserAdmin):
-    list_display = ('id', 'phone', 'full_name', 'image')
-    fields = ('phone', 'password', 'first_name', 'last_name', 'image', 'groups')
-    search_fields = ('phone', 'first_name', 'last_name')
-    ordering = ('id', )
+    list_display = ("id", "phone", "full_name", "image")
+    fields = ("phone", "password", "first_name", "last_name", "image", "groups")
+    search_fields = ("phone", "first_name", "last_name")
+    ordering = ("id",)
     fieldsets = ()
     add_fieldsets = (
-        (None, {
-            'fields': ('phone', 'password1', 'password2', 'first_name', 'last_name', 'image'),
-        }),
+        (
+            None,
+            {
+                "fields": (
+                    "phone",
+                    "password1",
+                    "password2",
+                    "first_name",
+                    "last_name",
+                    "image",
+                ),
+            },
+        ),
     )

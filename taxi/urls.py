@@ -21,11 +21,11 @@ from django.conf import settings
 from .views import *
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include(('users.urls', 'users'))),
-    path('', HomeRedirectView.as_view(), name='home'),
-    path('about/', AboutTemplateView.as_view(), name='about'),
-    path('orders/', include('orders.urls')),
-    path('trips/', include('trips.urls')),
-    path('reports/', include('reports.urls')),
+    path("admin/", admin.site.urls),
+    path("", include(("users.urls", "users"))),
+    path("", HomeRedirectView.as_view(), name="home"),
+    path("about/", AboutTemplateView.as_view(), name="about"),
+    path("orders/", include("orders.urls")),
+    path("trips/", include("trips.urls")),
+    path("reports/", include("reports.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -7,8 +7,8 @@ class EmptyStringFilter(BooleanFilter):
         if self._label:
             return self._label
         else:
-            result = 'exclude ' if self.exclude else ''
-            result += f'empty {self.field_name}'
+            result = "exclude " if self.exclude else ""
+            result += f"empty {self.field_name}"
             return result.capitalize()
 
     def set_label(self, value):

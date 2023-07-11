@@ -8,5 +8,5 @@ from .models import Order
 class CreateOrderForm(ModelForm, BootstrapForm):
     class Meta:
         model = Order
-        fields = '__all__'
-        exclude = ('customer', )
+        fields = "__all__"
+        exclude = ("customer",)

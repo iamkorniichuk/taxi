@@ -11,13 +11,12 @@ class LogInForm(AuthenticationForm, BootstrapForm):
 class SignUpForm(UserCreationForm, BootstrapForm):
     class Meta:
         model = get_user_model()
-        fields = ('phone', 'password1', 'password2')
+        fields = ("phone", "password1", "password2")
 
     def save(self):
         model = self.Meta.model
         user = model.objects.create_user(
-            self.cleaned_data['phone'],
-            self.cleaned_data['password1']
+            self.cleaned_data["phone"], self.cleaned_data["password1"]
         )
         return user
 
@@ -25,4 +24,4 @@ class SignUpForm(UserCreationForm, BootstrapForm):
 class UpdateForm(ModelForm, BootstrapForm):
     class Meta:
         model = get_user_model()
-        fields = ('first_name', 'last_name', 'image')
+        fields = ("first_name", "last_name", "image")

@@ -20,10 +20,10 @@ def format(format: str, **vars):
 def attrs(value, arg):
     attrs = value.field.widget.attrs
 
-    data = arg.split(', ')
+    data = arg.split(", ")
 
     for string in data:
-        kv = string.split(':')
+        kv = string.split(":")
         attrs[kv[0]] = kv[1]
 
     rendered = str(value)
