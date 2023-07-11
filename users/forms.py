@@ -1,14 +1,13 @@
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from commons.forms import BootstrapForm
 from django.forms import ModelForm
 from django.contrib.auth import get_user_model
 
 
-class LogInForm(AuthenticationForm, BootstrapForm):
+class LogInForm(AuthenticationForm):
     ...
 
 
-class SignUpForm(UserCreationForm, BootstrapForm):
+class SignUpForm(UserCreationForm):
     class Meta:
         model = get_user_model()
         fields = ("phone", "password1", "password2")
@@ -21,7 +20,7 @@ class SignUpForm(UserCreationForm, BootstrapForm):
         return user
 
 
-class UpdateForm(ModelForm, BootstrapForm):
+class UpdateForm(ModelForm):
     class Meta:
         model = get_user_model()
         fields = ("first_name", "last_name", "image")

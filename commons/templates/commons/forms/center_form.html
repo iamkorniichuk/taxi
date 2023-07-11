@@ -1,9 +1,11 @@
-<div class="d-flex justify-content-center align-items-center vh-75">
+{% load crispy_forms_tags %}
+
+<div class="d-flex justify-content-center align-items-center vh-50">
     <div class="card w-25">
         <form method="post" {{ form_attrs }}>
             <div class="card-body">
                 {% csrf_token %}
-                {{ form.as_p }}
+                {{ form|crispy }}
                 <button class="btn btn-primary w-100" type="submit">{{ button_label }}</button>
             </div>
         </form>
