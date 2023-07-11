@@ -1,95 +1,39 @@
-{% extends 'base.html' %}
+{% extends 'sidebar_base.html' %}
+{% load crispy_forms_tags %}
 {% load user_methods %}
 
 {% block title %}List of orders{% endblock title %}
 
-{% block content %}
-<div class="container py-5">
-    <div class="d-flex justify-content-between align-items-end">
-        {% comment %} // TODO: To get count from context data {% endcomment %}
-        {% with object_list.count as orders_count %}
-            <h3 class="text-muted">
-                {% if orders_count > 0 %}
-                    {{ orders_count }} order{{ orders_count|pluralize }} found
-                {% else %}
-                    No orders are found
-                {% endif %}
-            </h3>
-        {% endwith %}
+{% block sidebar %}
+    <form method="get">
 
-        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#filterForm" aria-expanded="false" aria-controls="filterForm">
-            Filter
-        </button>
-    </div>
-    
-    <div class="collapse" id="filterForm">
-        <form method="get">
+        {{ filter.form|crispy }}
 
-            {% has_perm  'orders.view_order' as can_view_order %}
-            {% if can_view_order %}
-                <div class="my-1">{% include 'commons/forms/input.html' with field=filter.form.customer icon="bi bi-people-fill" %}</div>
+        <div class="row">
+            <div class="col"><a class="btn btn-outline-secondary w-100" href="{% url 'orders:list' %}">Reset</a></div>
+            <div class="col"><button class="btn btn-primary w-100" type="submit">Apply</button></div>
+        </div>
+
+    </form>
+{% endblock sidebar %}
+
+{% block main %}
+    {% comment %} // TODO: To get count from context data {% endcomment %}
+    {% with object_list.count as orders_count %}
+        <h3 class="text-muted">
+            {% if orders_count > 0 %}
+                {{ orders_count }} order{{ orders_count|pluralize }} found
+            {% else %}
+                No orders are found
             {% endif %}
-
-            <div class="row my-1">
-                <div class="col">
-                    {% include 'commons/forms/fieldset.html' with field=filter.form.start %}
-                </div>
-                <div class="col">
-                    {% include 'commons/forms/fieldset.html' with field=filter.form.end %}
-                </div>
-            </div>
-            
-            <div class="row my-1">
-                <div class="col">
-                    {% include 'commons/forms/fieldset.html' with field=filter.form.price %}
-                </div>
-                <div class="col">
-                    {% include 'commons/forms/fieldset.html' with field=filter.form.datetime %}
-                </div>
-            </div>
-
-            <div class="row my-1">
-                <div class="col">
-                    {% include 'commons/forms/fieldset.html' with field=filter.form.car_type has_options=True %}
-                </div>
-                <div class="col">
-                    {% include 'commons/forms/fieldset.html' with field=filter.form.car_class has_options=True %}
-                </div>
-                {% has_perm  'trips.view_trip' as can_view_trip %}
-                {% if can_view_trip %}
-                    <div class="col">
-                        {% include 'commons/forms/fieldset.html' with field=filter.form.is_open has_options=True %}
-                    </div>
-                {% endif %}
-                <div class="col">
-                    {% include 'commons/forms/fieldset.html' with field=filter.form.note has_options=True %}
-                </div>
-            </div>
-            
-            <hr class="hr">
-
-            <div class=" my-1">
-                {% include 'commons/forms/input.html' with field=filter.form.ordering icon="bi bi-arrow-down-up" %}
-            </div>
-
-            <div class="row my-3">
-                <div class="col"></div>
-                <div class="col row">
-                    <div class="col"><a class="btn btn-outline-secondary w-100" href="{% url 'orders:list' %}">Reset</a></div>
-                    <div class="col"><button class="btn btn-primary w-100" type="submit">Apply</button></div>
-                </div>
-            </div>
-
-        </form>
-    </div>
+        </h3>
+    {% endwith %}
 
     <div class="row row-cols-2">
-    {% for order in filter.qs  %}
-        <div class="col mt-3">
-            {% include 'orders/includes/order.html' with order=order %}
-        </div>
-    {% endfor %}
+        {% for order in filter.qs  %}
+            <div class="col mt-3">
+                {% include 'orders/includes/order.html' with order=order %}
+            </div>
+        {% endfor %}
     </div>
-
-</div>
-{% endblock content %}
+{% endblock main %}
